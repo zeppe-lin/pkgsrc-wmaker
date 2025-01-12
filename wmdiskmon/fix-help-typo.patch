@@ -1,0 +1,16 @@
+Description: Fix typo.
+ Addresses spelling-error-in-binary Lintian warning.
+Author: Doug Torrance <dtorrance@piedmont.edu>
+Last-Update: 2016-01-30
+
+--- a/src/main.c
++++ b/src/main.c
+@@ -490,7 +490,7 @@
+            "  -v,  --version                 show program version and exit\n"
+            "  -w,  --windowed                run the application in windowed mode\n"
+            "  -bw, --broken-wm               activate broken window manager fix\n"
+-           "  -p,  --partition <device>      show informations for device (may be used more than once)\n"
++           "  -p,  --partition <device>      show information for device (may be used more than once)\n"
+            "  -n, --device                   show device instead of mount point\n"
+            "  -s, --single                   show only one device at a time\n");
+     /* OPTIONS SUPP :

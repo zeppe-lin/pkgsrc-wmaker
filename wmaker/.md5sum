@@ -1,0 +1,13 @@
+a5a1486d30976cdf750bc32789cb05a8  0001-wmaker-fix-stacking-order-of-dock-and-fullscreen.patch
+cd31e33ca4c68c379934444955881eef  0002-wmaker-allow-alt-tabbed-windows-over-fullscreen.patch
+5a86d0636fecdcf8f7569a17350320db  Blau.patch
+cd266d2ab6aeb8a868673235463d7bb3  DarkRed.patch
+f41e20f9caed0578b98d4038559de93a  Interlace.patch
+6f7da72cb9ac0919f8f08407e376a70c  Pastel.patch
+4dce5bd4514c17e31eef454704f1d35f  VioletBlue.patch
+c10ed685597d352c75cb2655829d829b  WMRootMenu
+78279b63f322c9d567dafb2eb4d73c6e  WindowMaker
+fa8ef150dd7c428793d34f589299f714  swback.png
+3e20ba788711d50d6868da87c913199d  swtile.png
+8df0c9d1da5ebd30417ad35284b81272  wmaker-0.96.0-da676c9.tar.gz
+b35a10d1220e119c5d7c8b1deada4db9  wmgenmenu.patch

@@ -1,0 +1,19 @@
+drwxr-xr-x	root/root	usr/
+drwxr-xr-x	root/root	usr/share/
+drwxr-xr-x	root/root	usr/share/WindowMaker/
+drwxr-xr-x	root/root	usr/share/WindowMaker/Themes/
+drwxr-xr-x	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/
+drwxr-xr-x	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Default.themed/
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Default.themed/Sun_background.xpm
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Default.themed/Sun_menuback.xpm
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Default.themed/Sun_tile.xpm
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Default.themed/Sun_titlebar-dark.xpm
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Default.themed/Sun_titlebar.xpm
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Default.themed/style
+drwxr-xr-x	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Full.themed/
+lrwxrwxrwx	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Full.themed/Sun_background.xpm -> ../Default.themed/Sun_background.xpm
+lrwxrwxrwx	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Full.themed/Sun_menuback.xpm -> ../Default.themed/Sun_menuback.xpm
+lrwxrwxrwx	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Full.themed/Sun_tile.xpm -> ../Default.themed/Sun_tile.xpm
+lrwxrwxrwx	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Full.themed/Sun_titlebar-dark.xpm -> ../Default.themed/Sun_titlebar-dark.xpm
+lrwxrwxrwx	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Full.themed/Sun_titlebar.xpm -> ../Default.themed/Sun_titlebar.xpm
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/Sun Microsystems/Full.themed/style

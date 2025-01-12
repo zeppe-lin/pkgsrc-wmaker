@@ -1,0 +1,19 @@
+--- wmcpufreq-3.0/wmcpufreq/wmcpufreq.c.orig	2015-01-02 18:19:47.000000000 +0100
++++ wmcpufreq-3.0/wmcpufreq/wmcpufreq.c	2015-01-02 18:19:30.000000000 +0100
+@@ -191,7 +191,13 @@
+ 	RedrawWindow();
+ 	/* get info */
+ 	for(i=0;i<=ncpu;i++)
+-	  freq[i]=cpufreq_get_freq_kernel(i+idcpu);
++	  {
++	    freq[i]=cpufreq_get_freq_kernel(i+idcpu);
++	    if (freq[i]>f_max)
++	      freq[i]=f_max;
++	    if (freq[i]<f_min)
++	      freq[i]=f_min;
++	  }
+ 	policy=cpufreq_get_policy(cpu);
+ 	strcpy(gov,policy->governor);
+ 	max=policy->max;
+
+

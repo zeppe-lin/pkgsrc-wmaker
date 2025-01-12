@@ -1,0 +1,30 @@
+# Description: Dockapp that displays disks usage
+# URL:         http://tnemeth.free.fr/projets/dockapps.html
+# Depends on:  xorg-imake xorg-libxpm
+
+name=wmdiskmon
+version=0.0.2
+release=1
+source="http://tnemeth.free.fr/projets/programmes/$name-$version.tar.gz
+	fix-help-typo.patch
+	fix-manpage.patch
+	include-ctype.h.patch
+	$name.desktop"
+
+build() {
+	patch -d $name-$version -Np1 -i $SRC/fix-help-typo.patch
+	patch -d $name-$version -Np1 -i $SRC/fix-manpage.patch
+	patch -d $name-$version -Np1 -i $SRC/include-ctype.h.patch
+
+	mkdir build; cd build
+
+	autoreconf -fi ../$name-$version
+	../$name-$version/configure  \
+		--prefix=/usr        \
+		--disable-debug      \
+
+	make V=1
+	make DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/applications $SRC/$name.desktop
+}

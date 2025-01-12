@@ -1,0 +1,189 @@
+Description: Added text color to the notes and colorscheme menu
+ I expanded the text color options for improve the contrast between
+ background and text.
+Author: Carlos Hernández <djtv93@yahoo.es>
+Origin: https://salsa.debian.org/wmaker-team/wmstickynotes/-/merge_requests/1
+Origin: https://github.com/d-torrance/wmstickynotes/pull/1
+Last-Update: 2021-05-25
+
+--- a/wmstickynotes.c
++++ b/wmstickynotes.c
+@@ -65,7 +65,9 @@
+ 	GtkWidget *color_menu;
+ 	GtkWidget *item;
+ 	GtkWidget *label;
+-	GtkWidget *color_box;
++	GtkWidget *color_box1;
++	GtkWidget *color_box2;
++	GtkWidget *color_box3;
+ 	GtkWidget *hbox;
+ 	GdkColor gcolor;
+ 	char *wmstickynotes_dir = NULL;
+@@ -161,16 +163,35 @@
+ 	for(i=0; i < num_color_schemes; i++) {
+ 		item = gtk_menu_item_new();
+ 		label = gtk_label_new(color_schemes[i].name);
+-		color_box = gtk_event_box_new();
+-		gtk_widget_set_size_request(color_box, 15, -1);
+-		hbox = gtk_hbox_new(FALSE, 4);
+-
++		//color box1
++		color_box1 = gtk_event_box_new();
++		gtk_widget_set_size_request(color_box1, 15, -1);
+ 		gdk_color_parse(color_schemes[i].top, &gcolor);
+-		gtk_widget_modify_bg(color_box, GTK_STATE_NORMAL, &gcolor);
+-		gtk_widget_modify_bg(color_box, GTK_STATE_PRELIGHT, &gcolor);
++		gtk_widget_modify_bg(color_box1, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_modify_bg(color_box1, GTK_STATE_PRELIGHT, &gcolor);
++		//
++
++		//color box2
++		color_box2 = gtk_event_box_new();
++		gtk_widget_set_size_request(color_box2, 15, -1);
++		gdk_color_parse(color_schemes[i].background, &gcolor);
++		gtk_widget_modify_bg(color_box2, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_modify_bg(color_box2, GTK_STATE_PRELIGHT, &gcolor);
++		//
++
++		//color box3
++		color_box3 = gtk_event_box_new();
++		gtk_widget_set_size_request(color_box3, 15, -1);
++		gdk_color_parse(color_schemes[i].text, &gcolor);
++		gtk_widget_modify_bg(color_box3, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_modify_bg(color_box3, GTK_STATE_PRELIGHT, &gcolor);
++		//
+ 
++		hbox = gtk_hbox_new(FALSE, 4);
+ 		gtk_container_add(GTK_CONTAINER(item), hbox);
+-		gtk_box_pack_start(GTK_BOX(hbox), color_box, FALSE, FALSE, 0);
++		gtk_box_pack_start(GTK_BOX(hbox), color_box1, FALSE, FALSE, 0);
++		gtk_box_pack_start(GTK_BOX(hbox), color_box2, FALSE, FALSE, 0);
++		gtk_box_pack_start(GTK_BOX(hbox), color_box3, FALSE, FALSE, 0);
+ 		gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
+ 
+ 		gtk_menu_shell_append(GTK_MENU_SHELL(color_menu), item);
+@@ -521,13 +542,15 @@
+ 	GtkWidget *color_item;
+ 	GtkWidget *item;
+ 	GtkWidget *label;
+-	GtkWidget *color_box;
++	GtkWidget *color_box1;
++	GtkWidget *color_box2;
++	GtkWidget *color_box3;
+ 	GtkWidget *hbox;
+ 	GdkColor gcolor;
+ 	int i;
+ 
+ 	color_menu = gtk_menu_new();
+-	color_item = gtk_menu_item_new_with_label("Color");
++	color_item = gtk_menu_item_new_with_label("Scheme");
+ 
+ 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(color_item), color_menu);
+ 	gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), color_item);
+@@ -536,16 +559,35 @@
+ 	for(i=0; i < num_color_schemes; i++) {
+ 		item = gtk_menu_item_new();
+ 		label = gtk_label_new(color_schemes[i].name);
+-		color_box = gtk_event_box_new();
+-		gtk_widget_set_size_request(color_box, 15, -1);
+-		hbox = gtk_hbox_new(FALSE, 4);
+-
++		//color box1
++		color_box1 = gtk_event_box_new();
++		gtk_widget_set_size_request(color_box1, 15, -1);
+ 		gdk_color_parse(color_schemes[i].top, &gcolor);
+-		gtk_widget_modify_bg(color_box, GTK_STATE_NORMAL, &gcolor);
+-		gtk_widget_modify_bg(color_box, GTK_STATE_PRELIGHT, &gcolor);
++		gtk_widget_modify_bg(color_box1, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_modify_bg(color_box1, GTK_STATE_PRELIGHT, &gcolor);
++		//
++
++		//color box2
++		color_box2 = gtk_event_box_new();
++		gtk_widget_set_size_request(color_box2, 15, -1);
++		gdk_color_parse(color_schemes[i].background, &gcolor);
++		gtk_widget_modify_bg(color_box2, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_modify_bg(color_box2, GTK_STATE_PRELIGHT, &gcolor);
++		//
++
++		//color box3
++		color_box3 = gtk_event_box_new();
++		gtk_widget_set_size_request(color_box3, 15, -1);
++		gdk_color_parse(color_schemes[i].text, &gcolor);
++		gtk_widget_modify_bg(color_box3, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_modify_bg(color_box3, GTK_STATE_PRELIGHT, &gcolor);
++		//
+ 
++		hbox = gtk_hbox_new(FALSE, 4);
+ 		gtk_container_add(GTK_CONTAINER(item), hbox);
+-		gtk_box_pack_start(GTK_BOX(hbox), color_box, FALSE, FALSE, 0);
++		gtk_box_pack_start(GTK_BOX(hbox), color_box1, FALSE, FALSE, 0);
++		gtk_box_pack_start(GTK_BOX(hbox), color_box2, FALSE, FALSE, 0);
++		gtk_box_pack_start(GTK_BOX(hbox), color_box3, FALSE, FALSE, 0);
+ 		gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
+ 
+ 		gtk_menu_shell_append(GTK_MENU_SHELL(color_menu), item);
+@@ -580,4 +622,7 @@
+ 	gtk_widget_modify_base(note->text_widget, GTK_STATE_NORMAL, &gcolor);
+ 	gtk_widget_modify_bg(note->window, GTK_STATE_NORMAL, &gcolor);
+ 	gtk_widget_modify_bg(note->resize_button_box, GTK_STATE_NORMAL, &gcolor);
++
++	gdk_color_parse(scheme->text, &gcolor);
++	gtk_widget_modify_text(note->text_widget,GTK_STATE_NORMAL, &gcolor);
+ }
+--- a/wmstickynotes.h
++++ b/wmstickynotes.h
+@@ -12,6 +12,7 @@
+ 	char *name;
+ 	char *top;
+ 	char *background;
++	char *text;
+ } ColorScheme;
+ 
+ typedef struct {
+@@ -32,16 +33,36 @@
+ /* The default directory under $HOME in which to store notes */
+ const char *default_wmstickynotes_dir = ".wmstickynotes";
+ 
+-const num_color_schemes = 8;
++const int num_color_schemes = 19;
+ ColorScheme color_schemes[] = {
+-	{"Yellow",	"#ffff00",	"#ffff88"},
+-	{"Green",	"#66ff00",	"#d0f0c0"},
+-	{"Orange",	"#ff7f00",	"#ffe5b4"},
+-	{"Pink",	"#ff007f",	"#ffc0cb"},
+-	{"Blue",	"#0000ff",	"#ccccff"},
+-	{"Purple",	"#4b0082",	"#c8a2c8"},
+-	{"Brown",	"#964b00",	"#f0dc82"},
+-	{"White",	"#aaaaaa",	"#ffffff"}};
++	{"Yello/Purple",	"#ffff00",	"#ffff88", "#4b0082"},
++	{"Yello/Black",		"#ffff00",	"#ffff88", "#000000"},
++
++	{"Green/Red",		"#66ff00",	"#d0f0c0", "#ff0000"},
++	{"Green/White",		"#66ff00",	"#008a00", "#ffffff"},
++
++	{"Orange/Purple",	"#ff7f00",	"#ffe5b4", "#4b0082"},
++	{"Orange/Black",	"#ff7f00",	"#ffe5b4", "#000000"},
++
++	{"Pink/Brown",		"#ff007f",	"#ffc0cb", "#964b00"},
++	{"Pink/Black",		"#ff007f",	"#ffc0cb", "#000000"},
++
++	{"Blue/Yellow",		"#ccccff",	"#0000ff", "#ffee31"},
++	{"Blue/White",		"#ccccff",	"#0000ff", "#ffffff"},
++
++	{"Purple/Orange",	"#c8a2c8",	"#4b0082", "#ff7f00"},
++	{"Purple/White",	"#4b0082",	"#c8a2c8", "#ffffff"},
++
++	{"Brown/Pink",		"#964b00",	"#f0dc82", "#ff007f"},
++	{"Brown/Black",		"#964b00",	"#f0dc82", "#000000"},
++
++	{"White/Blue",		"#aaaaaa",	"#ffffff", "#0000ff"},
++	{"White/Black",		"#aaaaaa",	"#ffffff", "#000000"},
++	{"White/Green",		"#aaaaaa",	"#ffffff", "#008a00"},
++
++	{"Black/Green",		"#aaaaaa",	"#000000", "#66ff00"},
++	{"Black/White",		"#aaaaaa",	"#000000", "#ffffff"}
++};
+ 
+ void delete_note(GtkWidget *widget, Note *note);
+ void save_note(GtkWidget *widget, Note *note);

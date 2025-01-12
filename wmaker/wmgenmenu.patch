@@ -1,0 +1,66 @@
+diff -ur WindowMaker-0.96.0.orig/util/wmgenmenu.c WindowMaker-0.96.0/util/wmgenmenu.c
+--- WindowMaker-0.96.0.orig/util/wmgenmenu.c	2023-03-13 10:40:46.000000000 -0400
++++ WindowMaker-0.96.0/util/wmgenmenu.c	2023-08-07 16:38:31.450130396 -0400
+@@ -41,12 +41,13 @@
+ {
+ 	char *t;
+ 	int ch;
+-	char *tmp, *theme_paths, *style_paths, *icon_paths;
++	char *tmp, *theme_paths, *style_paths, *icon_paths, *background_paths;
+ 
+ 	tmp = wstrconcat("-noext ", PKGDATADIR);
+ 	theme_paths = wstrconcat(tmp, "/Themes $HOME/" GSUSER_SUBDIR "/" USERDATA_SUBDIR "/" PACKAGE_TARNAME "/Themes WITH setstyle");
+ 	style_paths = wstrconcat(tmp, "/Styles $HOME/" GSUSER_SUBDIR "/" USERDATA_SUBDIR "/" PACKAGE_TARNAME "/Styles WITH setstyle");
+ 	icon_paths = wstrconcat(tmp, "/IconSets $HOME/" GSUSER_SUBDIR "/" USERDATA_SUBDIR "/" PACKAGE_TARNAME "/IconSets WITH seticons");
++	background_paths = wstrconcat(tmp, "/Backgrounds $HOME/GNUstep/Library/WindowMaker/Backgrounds WITH wmsetbg -u -t");
+ 
+ 	struct option longopts[] = {
+ 		{ "version",		no_argument,	NULL,	'v' },
+@@ -114,32 +115,12 @@
+ 	RMenu = WMCreatePLArray(WMCreatePLString("Window Maker"), NULL);
+ 
+ 	/* Root -> Applications */
+-	L1Menu = WMCreatePLArray(WMCreatePLString(_("Applications")), NULL);
+-
+-	/* Root -> Applications -> <category> */
+-	find_and_write(_("Terminals"), Terminals, 1);	/* always keep terminals the top item */
+-	find_and_write(_("Internet"), Internet, 0);
+-	find_and_write(_("Email"), Email, 0);
+-	find_and_write(_("Mathematics"), Mathematics, 0);
+-	find_and_write(_("File Managers"), File_managers, 0);
+-	find_and_write(_("Graphics"), Graphics, 0);
+-	find_and_write(_("Multimedia"), Multimedia, 0);
+-	find_and_write(_("Editors"), Editors, 0);
+-	find_and_write(_("Development"), Development, 0);
+-	find_and_write("Window Maker", WindowMaker, 0);
+-	find_and_write(_("Office"), Office, 0);
+-	find_and_write(_("Astronomy"), Astronomy, 0);
+-	find_and_write(_("Sound"), Sound, 0);
+-	find_and_write(_("Comics"), Comics, 0);
+-	find_and_write(_("Viewers"), Viewers, 0);
+-	find_and_write(_("Utilities"), Utilities, 0);
+-	find_and_write(_("System"), System, 0);
+-	find_and_write(_("Video"), Video, 0);
+-	find_and_write(_("Chat and Talk"), Chat, 0);
+-	find_and_write(_("P2P Network"), P2P, 0);
+-	find_and_write(_("Games"), Games, 0);
+-	find_and_write("OpenSUSE", OpenSUSE, 0);
+-	find_and_write("Mandriva", Mandriva, 0);
++	L1Menu = WMCreatePLArray(
++		WMCreatePLString(_("Applications")),
++		WMCreatePLString(_("OPEN_MENU")),		 
++		WMCreatePLString(_("/usr/share/WindowMaker/menu")),
++		NULL		 
++	);
+ 
+ 	WMAddToPLArray(RMenu, L1Menu);
+ 
+@@ -245,7 +226,7 @@
+ 	L3Menu = WMCreatePLArray(
+ 		WMCreatePLString(_("Images")),
+ 		WMCreatePLString("OPEN_MENU"),
+-		WMCreatePLString("-noext $HOME/" GSUSER_SUBDIR "/" USERDATA_SUBDIR "/" PACKAGE_TARNAME "/Backgrounds WITH wmsetbg -u -t"),
++		WMCreatePLString(background_paths),
+ 		NULL
+ 	);
+ 	WMAddToPLArray(L2Menu, L3Menu);

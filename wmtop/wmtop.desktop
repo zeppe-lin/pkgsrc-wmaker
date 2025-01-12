@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmtop
+Comment=Dockapp version of the CPU monitoring utility top
+Exec=wmtop
+Categories=System;Monitor
+Keywords=system;process;task;windowmaker

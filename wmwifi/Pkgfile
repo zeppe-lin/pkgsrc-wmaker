@@ -1,0 +1,27 @@
+# Description: Dockapp that displays wireless signal strength
+# URL:         https://www.dockapps.net/wmwifi
+# Depends on:  xorg-libxpm
+
+name=wmwifi
+version=0.6
+release=1
+source="https://www.dockapps.net/download/$name-$version.tar.gz
+	e7fbe8db3489197ca088dbea06c6e18f7a20dfbc.patch
+	fix-manpage.patch
+	wmwifi.desktop"
+
+build() {
+	patch -d $name-$version -Np1 -i $SRC/e7fbe8db3489197ca088dbea06c6e18f7a20dfbc.patch
+	patch -d $name-$version -Np2 -i $SRC/fix-manpage.patch
+
+	mkdir build; cd build
+
+	autoreconf -fi ../$name-$version
+	../$name-$version/configure  \
+		--prefix=/usr        \
+
+	make CFLAGS="$CFLAGS" V=1
+	make DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/applications $SRC/$name.desktop
+}

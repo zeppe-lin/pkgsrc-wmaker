@@ -1,0 +1,84 @@
+.\" wmtext manual page
+.Dd October 14, 2024
+.Dt wmtext 1
+.Os
+.\" ==================================================================
+.Sh NAME
+.Nm wmtext
+.Nd dockapp that displays the output of a shell command
+.\" ==================================================================
+.Sh SYNOPSIS
+.Nm wmtext
+.Op Fl i Ar seconds
+.Op Fl b Ar bgcolor
+.Op Fl f Ar fgcolor
+.Op Fl font Ar fontname
+.Op Fl a Ar regex bgcolor fgcolor ...
+.Ar command args ...
+.\" ==================================================================
+.Sh DESCRIPTION
+.Nm
+displays the output of a shell command.
+The background and text colors can be changed according to patterns
+found in the command output.
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl i Ar seconds
+Set the time interval in seconds between command executions.
+.It Fl b Ar bgcolor
+Set the default background color.
+.It Fl f Ar fgcolor
+Set the default foreground (text) color.
+.It Fl font Ar fontname
+Set the font.
+.It Fl a Ar regexp bgcolor fgcolor
+Set an alert: if the regular expression regexp is found in the output,
+change background and foreground colors to bgcolor and fgcolor.
+.El
+.Pp
+Several alerts can be set.
+Regular expressions are tried in the same order as they were specified
+on the command line.
+The first match determines the colors to be used.
+If no match is found, the default colors are used.
+If the default colors are not specified, black will be used for
+background, white for the foreground.
+.Pp
+Colors can be specified as X color names
+.Po found in rgb.txt, e.g.
+.Dq Misty Rose
+.Pc
+or as hexadecimal RGB triplets
+.Po
+.Dq #45AF23
+.Pc .
+.\" ==================================================================
+.Sh EXAMPLES
+Display the date:
+.Bd -literal -offset indent
+wmtext "date +%H:%M:%S"
+.Ed
+.Pp
+Use specified font:
+.Bd -literal -offset indent
+wmtext -font 5x7 "date +%H:%M:%S"
+.Ed
+.Pp
+Display the ACPI state of the first battery, with varying colors
+depending on whether it is charging, discharging, under 10% charge or
+in another state:
+.Bd -literal -offset indent
+wmtext -a "Charging|Unknown"    darkgreen white \e
+       -a "[^0-9][0-9]\.[0-9]%"  red       white \e
+       -a "Discharging"         navyblue  white \e
+       myscripts/acpi_battery.sh
+.Ed
+.\" ==================================================================
+.Sh AUTHORS
+.An Michael G. Henderson Aq Mt mghenderson@lanl.gov .
+.Pp
+Manual page created by
+.An Alexandr Savca Aq Mt alexandr.savca89@gmail.com .
+.\"
+.\" End of file.

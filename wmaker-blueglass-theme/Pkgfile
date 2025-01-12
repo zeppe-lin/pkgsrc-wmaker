@@ -1,0 +1,21 @@
+# Description: BlueGlass WindowMaker theme
+# URL:         https://zeppe-lin.github.io/
+# Depends on:  wmaker
+
+name=wmaker-blueglass-theme
+version=0.1
+release=1
+source="BlueGlass.themed/style
+	BlueGlass.themed/t3.png
+	BlueGlass.themed/t3.tiff
+	BlueGlass.themed/title_active.png
+	BlueGlass.themed/title_active.tiff
+	BlueGlass.themed/title_inactive.png
+	BlueGlass.themed/title_inactive.tiff
+	BlueGlass.themed/title_owner.png
+	BlueGlass.themed/title_owner.tiff"
+
+build() {
+	install -m 0644 -Dt $PKG/usr/share/WindowMaker/Themes/BlueGlass.themed \
+		*.png *.tiff style
+}

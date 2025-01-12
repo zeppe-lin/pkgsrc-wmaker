@@ -1,0 +1,13 @@
+# Description: Dockapp that displays the current battery status
+# URL:         https://www.dockapps.net/wmacpi
+# Depends on:  libdockapp
+
+name=wmacpi
+version=2.4
+release=1
+source="https://www.dockapps.net/download/$name-$version.tar.gz
+	30c212f52bc37c83e910294477c78cfce09df416.patch"
+
+build() {
+	make -C $name-$version PREFIX=/usr DESTDIR=$PKG install
+}

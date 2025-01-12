@@ -1,0 +1,17 @@
+# Description: PineWM theme for Window Maker
+# URL:         https://www.pling.com/p/1307528
+# Depends on:  wmaker
+
+name=wmaker-pinewm-theme
+version=2.0
+release=1
+source=PineWMv2.tar.xz
+
+build() {
+	mkdir -p $PKG/usr/share/WindowMaker/Themes
+
+	# remove junk
+	rm PineWMv2.themed/colortransfer01.png PineWMv2.themed/".#style.bak"
+
+	mv PineWMv2.themed $PKG/usr/share/WindowMaker/Themes/
+}

@@ -1,0 +1,102 @@
+From 6429847494fbcd84e2bab026c3fd9239c7cf8927 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>
+Date: Tue, 12 Jul 2016 23:49:46 +0200
+Subject: [PATCH 1/2] wmaker: fix stacking order of dock and fullscreen
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This reverts the commits:
+ 311ab6b08ccf ("Raise fullscreened window")
+ a504370f3b27 ("Remove WMFullscreenLevel")
+
+Removing WMFullscreenLevel had the side effect that a dock or panel
+having the _NET_WM_WINDOW_TYPE_DOCK type would stack on top of
+fullscreen windows, obscuring part of them.  This is unwanted. No
+other window should cover a focused fullscreen window:.
+https://specifications.freedesktop.org/wm-spec/latest/ar01s09.html#STACKINGORDER
+
+Simply raising the fullscreen window to the top of the stack of normal
+windows is not sufficient if there are windows with higher stacking
+levels present.  The separate WMFullscreenLevel is needed.
+
+Cc: Amadeusz Sławiński <amade@asmblr.net>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+---
+ src/WindowMaker.h |  1 +
+ src/actions.c     | 16 ++++++++++------
+ src/wmspec.c      |  2 +-
+ 3 files changed, 12 insertions(+), 7 deletions(-)
+
+diff --git a/src/WindowMaker.h b/src/WindowMaker.h
+index fe22a79..ce07d82 100644
+--- a/src/WindowMaker.h
++++ b/src/WindowMaker.h
+@@ -59,6 +59,7 @@ enum {
+ 	WMSubmenuLevel = 15,
+ 	WMMainMenuLevel = 20,
+ 	WMStatusLevel = 21,
++	WMFullscreenLevel = 50,
+ 	WMModalLevel = 100,
+ 	WMPopUpLevel = 101,
+ 	WMScreensaverLevel = 1000,
+diff --git a/src/actions.c b/src/actions.c
+index f46e586..e6a91d5 100644
+--- a/src/actions.c
++++ b/src/actions.c
+@@ -972,8 +976,7 @@ void wFullscreenMonitorsWindow(WWindow *wwin, unsigned long top, unsigned long b
+ 
+ 	wwin->flags.fullscreen = True;
+ 	wWindowConfigureBorders(wwin);
+-	ChangeStackingLevel(wwin->frame->core, WMNormalLevel);
+-	wRaiseFrame(wwin->frame->core);
++	ChangeStackingLevel(wwin->frame->core, WMFullscreenLevel);
+ 
+ 	wwin->bfs_geometry.x = wwin->frame_x;
+ 	wwin->bfs_geometry.y = wwin->frame_y;
+@@ -1010,8 +1013,7 @@ void wFullscreenWindow(WWindow *wwin)
+ 
+ 	wWindowConfigureBorders(wwin);
+ 
+-	ChangeStackingLevel(wwin->frame->core, WMNormalLevel);
+-	wRaiseFrame(wwin->frame->core);
++	ChangeStackingLevel(wwin->frame->core, WMFullscreenLevel);
+ 
+ 	wwin->bfs_geometry.x = wwin->frame_x;
+ 	wwin->bfs_geometry.y = wwin->frame_y;
+@@ -1035,10 +1037,15 @@ void wUnfullscreenWindow(WWindow *wwin)
+ 
+ 	wwin->flags.fullscreen = False;
+ 
+-	if (WFLAGP(wwin, sunken))
+-		ChangeStackingLevel(wwin->frame->core, WMSunkenLevel);
+-	else if (WFLAGP(wwin, floating))
+-		ChangeStackingLevel(wwin->frame->core, WMFloatingLevel);
++	if (wwin->frame->core->stacking->window_level == WMFullscreenLevel) {
++		if (WFLAGP(wwin, sunken)) {
++			ChangeStackingLevel(wwin->frame->core, WMSunkenLevel);
++		} else if (WFLAGP(wwin, floating)) {
++			ChangeStackingLevel(wwin->frame->core, WMFloatingLevel);
++		} else {
++			ChangeStackingLevel(wwin->frame->core, WMNormalLevel);
++		}
++	}
+ 
+ 	wWindowConfigure(wwin, wwin->bfs_geometry.x, wwin->bfs_geometry.y,
+ 			 wwin->bfs_geometry.width, wwin->bfs_geometry.height);
+diff --git a/src/wmspec.c b/src/wmspec.c
+index 9b56f96..0bfc864 100644
+--- a/src/wmspec.c
++++ b/src/wmspec.c
+@@ -1057,7 +1057,7 @@ static int getWindowLayer(WWindow *wwin)
+ 		if (wwin->transient_for) {
+ 			WWindow *parent = wWindowFor(wwin->transient_for);
+ 			if (parent && parent->flags.fullscreen)
+-				layer = WMNormalLevel;
++				layer = WMFullscreenLevel;
+ 		}
+ 		/* //layer = WMPopUpLevel; // this seems a bad idea -Dan */
+ 	} else if (wwin->type == net_wm_window_type_dropdown_menu) {
+-- 
+2.10.2
+

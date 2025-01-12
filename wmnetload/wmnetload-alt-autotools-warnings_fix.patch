@@ -1,0 +1,63 @@
+diff --git a/wmnetload/configure.in b/wmnetload/configure.in
+index 9cae2ad..7a8d5e2 100644
+--- a/wmnetload/configure.in
++++ b/wmnetload/configure.in
+@@ -6,14 +6,14 @@ dnl
+ dnl WN_TYPE_ULONGLONG_T()
+ dnl See if ulonglong_t is already defined on the system.
+ dnl
+-AC_DEFUN(WN_TYPE_ULONGLONG_T,
++AC_DEFUN([WN_TYPE_ULONGLONG_T],
+ [AC_CHECK_TYPE(ulonglong_t, unsigned long long)])
+ 
+ dnl
+ dnl WN_HAVE_SOCKADDR_SA_LEN()
+ dnl See if the system supports sockaddr's sa_len member
+ dnl
+-AC_DEFUN(WN_HAVE_SOCKADDR_SA_LEN,
++AC_DEFUN([WN_HAVE_SOCKADDR_SA_LEN],
+ [AC_CACHE_CHECK([for sa_len in struct sockaddr], ac_cv_sockaddr_sa_len,
+ [AC_TRY_COMPILE([#include <sys/types.h>
+ 	#include <sys/socket.h>], 
+@@ -29,7 +29,7 @@ dnl
+ dnl WN_HAVE_IPV6()
+ dnl See if the system "supports" IPv6 applications.
+ dnl
+-AC_DEFUN(WN_HAVE_IPV6,
++AC_DEFUN([WN_HAVE_IPV6],
+ [AC_CACHE_CHECK([for IPv6 support], ac_cv_have_ipv6,
+ [AC_TRY_COMPILE([#include <sys/types.h>
+ 	#include <netinet/in.h>], 
+@@ -45,7 +45,7 @@ dnl
+ dnl WN_CHECK_LIB(NAME, FUNCTION, EXTRALIBS)
+ dnl Just like AC_CHECK_LIB, except that it respects LIBRARY_SEARCH_PATH.
+ dnl
+-AC_DEFUN(WN_CHECK_LIB,
++AC_DEFUN([WN_CHECK_LIB],
+ [
+ LDFLAGS_old="$LDFLAGS"
+ LDFLAGS="$LDFLAGS $LIBRARY_SEARCH_PATH"
+@@ -58,7 +58,7 @@ dnl WN_CHECK_HEADER(NAME, FLAGS)
+ dnl Just like AC_CHECK_HEADER, except that it respects HEADER_SEARCH_PATH
+ dnl and it takes a cpp flags parameter.
+ dnl
+-AC_DEFUN(WN_CHECK_HEADER,
++AC_DEFUN([WN_CHECK_HEADER],
+ [
+ CPPFLAGS_old="$CPPFLAGS"
+ CPPFLAGS="$CPPFLAGS $HEADER_SEARCH_PATH $2"
+diff --git a/wmnetload/src/Makefile.am b/wmnetload/src/Makefile.am
+index c35fc6c..c676659 100644
+--- a/wmnetload/src/Makefile.am
++++ b/wmnetload/src/Makefile.am
+@@ -25,8 +25,8 @@ wmnetload_SOURCES	= wmnetload.c ifstat.h ifstat_@OS@.c utils.h utils.c
+ EXTRA_wmnetload_SOURCES	= ifstat_linux.c ifstat_netbsd.c ifstat_solaris.c \
+ 			  ifstat_freebsd.c
+ 
+-LDFLAGS			= @RPATH@
++AM_LDFLAGS			= @RPATH@
+ 
+ LDADD	 = @LIBRARY_SEARCH_PATH@ @XLFLAGS@ @XLIBS@ -ldockapp -lXpm -lm
+-CPPFLAGS = @CPPFLAGS@ @XCFLAGS@ -DVERSION=\"@VERSION@\" 
++AM_CPPFLAGS = @CPPFLAGS@ @XCFLAGS@ -DVERSION=\"@VERSION@\" 
+ INCLUDES = @HEADER_SEARCH_PATH@ -I$(top_srcdir)/xpm/@WN_LOOK@

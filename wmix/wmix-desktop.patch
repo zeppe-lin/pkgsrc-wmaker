@@ -1,0 +1,12 @@
+--- a/wmix.desktop	2024-10-13 08:29:08.000000000 +0300
++++ b/wmix.desktop	2024-10-13 08:39:08.861956359 +0300
+@@ -2,7 +2,7 @@
+ Version=1.0
+ Type=Application
+ Name=wmix
+-Comment=A mixer dockapp using the OSS mixer API
++Comment=Dockapp mixer for OSS or ALSA
+ Exec=wmix
+ Categories=Audio;Mixer
+-Keywords=sound;mixer;dockapp;window maker
++Keywords=sound;mixer;dockapp;windowmaker

@@ -1,0 +1,27 @@
+# Description: Library that provides a framework for developing dockapps
+# URL:         https://www.dockapps.net/
+# Depends on:  xorg-libxpm xorg-mkfontscale
+
+# xorg-mkfontscale is needed only for post-install script
+
+name=libdockapp
+version=0.7.3
+release=1
+source=https://www.dockapps.net/download/$name-$version.tar.gz
+
+build() {
+	mkdir build; cd build
+
+	autoreconf -fi ../$name-$version
+	../$name-$version/configure  \
+		--prefix=/usr        \
+		--without-examples   \
+
+	make V=1
+	make DESTDIR=$PKG install
+
+	ln -s libdockapp/dockapp.h $PKG/usr/include/dockapp.h
+
+	# remove junk
+	rm $PKG/usr/share/fonts/X11/misc/fonts.dir
+}

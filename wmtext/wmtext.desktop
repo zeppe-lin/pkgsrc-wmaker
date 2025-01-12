@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmtext
+Comment=Dockapp that displays the output of a shell command
+Exec=wmtext 'echo $(date)'
+Categories=Utility
+Keywords=dockapp;windowmaker

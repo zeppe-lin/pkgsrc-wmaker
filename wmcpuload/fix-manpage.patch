@@ -1,0 +1,82 @@
+diff '--color=auto' -pruN wmcpuload-1.1.1.orig/doc/wmcpuload.1 wmcpuload-1.1.1/doc/wmcpuload.1
+--- wmcpuload-1.1.1.orig/doc/wmcpuload.1	2024-12-31 16:51:18.598634516 +0200
++++ wmcpuload-1.1.1/doc/wmcpuload.1	2024-12-31 16:55:52.437277446 +0200
+@@ -16,22 +16,16 @@
+ .\" .sp <n>    insert n+1 empty lines
+ .\" for manpage-specific macros, see man(7)
+ .SH NAME
+-wmcpuload \- A dockapp to display CPU usage
++wmcpuload \- dockapp that displays current CPU usage
+ .SH SYNOPSIS
+ .B wmcpuload [options]
+ .SH DESCRIPTION
+-This manual page documents briefly the
+-.B wmcpuload
+-command.
+-This manual page was written for the Debian GNU/Linux distribution.
+-.PP
+ .\" TeX users may be more comfortable with the \fB<whatever>\fP and
+ .\" \fI<whatever>\fP escape sequences to invode bold face and italics,
+ .\" respectively.
+-\fBWMCPULoad\fP is a dockapp that is supported by X window managers such as
+-Window Maker, AfterStep, BlackBox, and Enlightenment. It displays the current
+-CPU usage, expressed as a percentile and a chart, and has an LCD look-alike
+-user interface. The back-light may be turned on/off by clicking the mouse
++\fBwmcpuload\fP is a dockapp that displays current CPU usage, expressed
++as a percentile and a chart, and has an LCD look-alike user interface.
++The back-light may be turned on/off by clicking the mouse
+ button over the application. If the CPU usage hits a certain threshold, an
+ alarm-mode will alert you by turning on back-light.
+ 
+@@ -46,40 +40,40 @@ the  display  specified  by the
+ environment variable is used.
+ .TP
+ .B \-t,  \-\-title <string>
+-specify title name
++Specify title name.
+ .TP
+ .B \-bl, \-\-backlight
+-turn on back-light.
++Turn on back-light.
+ .TP
+ .B \-lc, \-\-light-color <color>
+-back-light color (rgb:6E/C6/3B is default)
++Back-light color (rgb:6E/C6/3B is default).
+ .TP
+ .B \-i,  \-\-interval <number>
+-number of secs between updates (1 is default)
++Number of secs between updates (1 is default).
+ .TP
+ .B \-c,  \-\-cpu <number> (GNU/Linux / IRIX)
+ CPU number to monitor (Counting starts with 0).
+ .TP
+ .B \-n,  \-\-ignore\-nice (GNU/Linux / FreeBSD / OpenBSD / NetBSD)
+-ignore a nice value
++Ignore a nice value.
+ .TP
+ .B \-h,  \-\-help
+-show help text and exit
++Show help text and exit.
+ .TP
+ .B \-v,  \-\-version
+-show program version and exit
++Show program version and exit.
+ .TP
+ .B \-w,  \-\-windowed
+-run the application in windowed mode
++Run the application in windowed mode.
+ .TP
+ .B \-wp, \-\-windowed-withpanel
+-run the application in windowed mode with background panel
++Run the application in windowed mode with background panel.
+ .TP
+ .B \-bw, \-\-broken\-wm
+-activate broken window manager fix
++Activate broken window manager fix.
+ .TP
+ .B \-a,  \-\-alarm <percentage>
+-activate alarm mode. <percentage> is threshold of percentage from 0 to 100.(90 is default)
++Activate alarm mode. <percentage> is threshold of percentage from 0 to 100 (90 is default).
+ 
+ .SH AUTHOR
+ WMCPULoad was written by Seiichi SATO <ssato@sh.rim.or.jp>.

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmwifi
+Comment=Dockapp that displays wireless signal strength
+Exec=wmwifi
+Categories=System;Network
+Keywords=network;wifi;interface;dockapp;windowmaker

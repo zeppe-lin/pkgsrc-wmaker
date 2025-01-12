@@ -1,0 +1,26 @@
+# Description: Dockapp that displays memory and swap usage
+# URL:         https://www.dockapps.net/wmmemload
+# Depends on:  xorg-libxpm
+
+name=wmmemload
+version=0.1.8
+release=1
+source="https://www.dockapps.net/download/$name-$version.tar.gz
+	bd0d7d1f67b5a4f7ba2eeb94224a10f949517c1a.patch
+	fix-manpage.patch
+	$name.desktop"
+
+build() {
+	patch -d dockapps -Np1 -i $SRC/bd0d7d1f67b5a4f7ba2eeb94224a10f949517c1a.patch
+	patch -d dockapps -Np1 -i $SRC/fix-manpage.patch
+
+	mkdir build; cd build
+
+	autoreconf -fi ../dockapps
+	../dockapps/configure --prefix=/usr
+
+	make V=1
+	make DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/applications $SRC/$name.desktop
+}

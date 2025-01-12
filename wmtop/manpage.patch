@@ -1,0 +1,22 @@
+diff --git a/wmtop/wmtop.1 b/wmtop/wmtop.1
+index 3bb2061..6619496 100644
+--- a/wmtop/wmtop.1
++++ b/wmtop/wmtop.1
+@@ -4,7 +4,7 @@
+ .TH WMTOP 1 "JUNE 1999" Linux "User Manuals"
+ 
+ .SH NAME
+-wmtop - WindowMaker dockapp
++wmtop - dockapp version of the CPU monitoring utility top
+ 
+ .SH SYNOPSIS
+ .B wmtop
+@@ -52,7 +52,7 @@ of the name and '$' to mean the end.
+ Show memory usage rather than CPU usage on start-up.
+ .TP
+ .B \-a \fItheme
+-Choose an artisitc style or theme for wmtop to use.
++Choose an artistic style or theme for wmtop to use.
+ .TP
+ .B \-s
+ Set interval between process samples in milliseconds.

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmcliphist
+Comment=Dockapp that provides a clipboard history
+Exec=wmcliphist
+Categories=Utility
+Keywords=clipboard;dockapp;windowmaker

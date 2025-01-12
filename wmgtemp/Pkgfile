@@ -1,0 +1,25 @@
+# Description: Dockapp that displays the CPU and SYS temperatures
+# URL:         https://www.dockapps.net/wmgtemp
+# Depends on:  libdockapp lm-sensors
+
+name=wmgtemp
+version=1.2
+release=1
+source="https://www.dockapps.net/download/$name-$version.tar.gz
+	219e04f6ad97a4fdcefc5b68c91a7c9b10800849.patch
+	$name.desktop"
+
+build() {
+	patch -d $name-$version -Np1 -i $SRC/219e04f6ad97a4fdcefc5b68c91a7c9b10800849.patch
+
+	mkdir build; cd build
+
+	autoreconf -fi ../$name-$version
+	../$name-$version/configure      \
+		--prefix=/usr            \
+
+	make V=1
+	make DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/applications $SRC/$name.desktop
+}

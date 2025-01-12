@@ -1,0 +1,9 @@
+drwxr-xr-x	root/root	usr/
+drwxr-xr-x	root/root	usr/bin/
+-rwxr-xr-x	root/root	usr/bin/wmacpi
+-rwxr-xr-x	root/root	usr/bin/wmacpi-cli
+drwxr-xr-x	root/root	usr/share/
+drwxr-xr-x	root/root	usr/share/man/
+drwxr-xr-x	root/root	usr/share/man/man1/
+-rwxr-xr-x	root/root	usr/share/man/man1/wmacpi-cli.1.gz
+-rwxr-xr-x	root/root	usr/share/man/man1/wmacpi.1.gz

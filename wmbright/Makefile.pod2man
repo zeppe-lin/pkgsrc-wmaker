@@ -1,0 +1,3 @@
+all:
+	pod2man -c ' ' -n wmbright -s 1 -r "wmbright ${VERSION}" \
+		wmbright.1.pod > wmbright.1x

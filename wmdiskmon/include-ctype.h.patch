@@ -1,0 +1,15 @@
+Description: Include ctype.h
+ Fixes "implicit declaration of function" warnings for 'isdigit' and 'toupper'.
+Author: Doug Torrance <dtorrance@piedmont.edu>
+Last-Update: 2016-01-30
+
+--- a/src/main.c
++++ b/src/main.c
+@@ -25,6 +25,7 @@
+ #include "config.h"
+ #endif
+ 
++#include <ctype.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>

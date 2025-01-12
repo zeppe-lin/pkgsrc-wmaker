@@ -1,0 +1,17 @@
+--- a/WindowMaker/Styles/VioletBlue.style	2024-05-26 17:36:05.218480749 +0300
++++ b/WindowMaker/Styles/VioletBlue.style	2024-05-26 17:43:42.975435537 +0300
+@@ -6,10 +6,10 @@
+   ClipTitleFont = "Verdana:bold:pixelsize=10";
+   LargeDisplayFont = "Trebuchet MS,sans serif:pixelsize=24";
+   TitleJustify = center;
+-  HighlightColor = white;
+-  HighlightTextColor = black;
+-  ClipTitleColor = white;
+-  CClipTitleColor = gray20;
++  HighlightColor = "#3d1b45";
++  HighlightTextColor = white;
++  ClipTitleColor = black;
++  CClipTitleColor = gray30;
+   FTitleColor = white;
+   PTitleColor = gray;
+   UTitleColor = white;

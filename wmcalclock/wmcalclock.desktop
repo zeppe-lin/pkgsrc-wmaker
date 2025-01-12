@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmcalclock
+Comment=Dockapp that displays calendar clock
+Exec=wmcalclock
+Categories=Utility;Clock
+Keywords=clock;calendar;dockapp;windowmaker

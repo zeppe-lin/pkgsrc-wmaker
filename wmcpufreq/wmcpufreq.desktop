@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmcpufreq
+Comment=Dockapp that displays CPU frequency
+Exec=wmcpufreq
+Categories=System;Monitor
+Keywords=cpu;frequency;monitor;dockapp;windowmaker

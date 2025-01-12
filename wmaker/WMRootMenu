@@ -1,0 +1,51 @@
+(
+  WindowMaker,
+  (
+    "Applications",
+    OPEN_PLMENU,
+    "|| wmmenugen -parser:xdg /usr/share/applications ~/.local/share/applications"
+  ),
+  (
+    "Desktop",
+    OPEN_PLMENU,
+    "|| wmmenugen -parser:xdg ~/Desktop"
+  ),
+  (Run..., EXEC, "%A(Run,Type command to run)"),
+  ("XTerm", EXEC, "xterm -sb"),
+  (
+    "Window Maker",
+    ("Info Panel ...", INFO_PANEL),
+    ("Legal Panel ...", LEGAL_PANEL),
+    ("Preferences", EXEC, WPrefs),
+    ("Refresh screen", REFRESH),
+    ("Restart", RESTART)
+  ),
+  (
+    "Utilities",
+    ("Windows Properties", SHEXEC, "xprop | gxmessage -center -geometry 640x480 -title 'xprop' -file -"),
+    ("Kill X Application", EXEC, "xkill")
+  ),
+  (
+    "Selection",
+    ("Copy", SHEXEC, "echo '%s' | wxcopy"),
+    ("Mail To", EXEC, "xdg-email '%s'"),
+    ("Navigate", EXEC, "xdg-open '%s'"),
+    ("Search in Manual", EXEC, "MANUAL_SEARCH(%s)")
+  ),
+  (
+    "Commands",
+    ("Lock", EXEC, "slock")
+  ),
+  (
+    "WorkSpace",
+    ("Appearance", OPEN_MENU, "appearance.menu"),
+    ("Arrange Icons", ARRANGE_ICONS),
+    ("Clear Session", CLEAR_SESSION),
+    ("Hide Others", HIDE_OTHERS),
+    ("Save Session", SAVE_SESSION),
+    ("Show All", SHOW_ALL),
+    ("Workspaces", WORKSPACE_MENU)
+  ),
+  ("Exit", EXIT),
+  ("Exit Session", SHUTDOWN)
+)

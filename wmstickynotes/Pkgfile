@@ -1,0 +1,28 @@
+# Description: Dockapp that creates note windows
+# URL:         https://sourceforge.net/projects/wmstickynotes/
+# Depends on:  gtk3
+
+name=wmstickynotes
+version=0.7
+release=1
+source="http://downloads.sourceforge.net/$name/$name-$version.tar.gz
+	add-colors.patch
+	asprintf-format-string-fixes.patch
+	fix-missing-asprintf-declaration.patch
+	gtk-3-compatibility-fixes.patch"
+
+build() {
+	patch -d $name-$version -p1 -i $SRC/add-colors.patch
+	patch -d $name-$version -p1 -i $SRC/fix-missing-asprintf-declaration.patch
+	patch -d $name-$version -p1 -i $SRC/asprintf-format-string-fixes.patch
+	patch -d $name-$version -p1 -i $SRC/gtk-3-compatibility-fixes.patch
+
+	mkdir build; cd build
+
+	autoreconf -fi ../$name-$version
+	../$name-$version/configure  \
+		--prefix=/usr        \
+
+	make V=1
+	make DESTDIR=$PKG install
+}

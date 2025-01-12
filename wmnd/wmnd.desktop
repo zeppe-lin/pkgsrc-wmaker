@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmnd
+Comment=Dockapp that monitors network interfaces
+Exec=wmnd
+Categories=System;Net;WindowMaker;DockApps
+Keywords=network;interface;dockapp;windowmaker

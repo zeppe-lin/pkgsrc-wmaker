@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmgtemp
+Comment=Dockapp that displays the CPU and SYS temperatures
+Exec=wmgtemp
+Categories=System
+Keywords=cpu;system;dockapp;windowmaker

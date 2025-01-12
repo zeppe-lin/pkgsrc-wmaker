@@ -1,0 +1,25 @@
+diff '--color=auto' -pruN wmsystemtray-1.4.orig/wmsystemtray.1.in wmsystemtray-1.4/wmsystemtray.1.in
+--- wmsystemtray-1.4.orig/wmsystemtray.1.in	2025-01-02 14:56:47.326224622 +0200
++++ wmsystemtray-1.4/wmsystemtray.1.in	2025-01-02 15:04:45.716252498 +0200
+@@ -8,16 +8,16 @@
+ ..
+ .TH wmsystemtray 1 "@DATE@"
+ .SH NAME
+-wmsystemtray \- A freedesktop.org system tray as a Window Maker dock app
++wmsystemtray \- dockapp that provides freedesktop.org system tray
+ .P
+ .SH SYNOPSIS
+ .B wmsystemtray
+ .RB [\| options \|]
+ .SH DESCRIPTION
+-\fBwmsystemtray\fP is a system tray using the freedesktop.org system tray
+-protocol designed as a Window Maker dock app. It has the ability to display
+-more than one dock window to make room for more tray icons, and the ability to
+-scroll through the icons if more are present than will fit.
++\fBwmsystemtray\fP is a dockapp that provides freedesktop.org system tray.
++It has the ability to display more than one dock window to make room for more
++tray icons, and the ability to scroll through the icons if more are present
++than will fit.
+ .SH OPTIONS
+ .TP
+ .BI "-display " <display\ name>

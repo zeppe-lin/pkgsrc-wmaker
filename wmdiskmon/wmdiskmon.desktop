@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmdiskmon
+Comment=Dockapp that displays disks usage
+Exec=wmdiskmon
+Categories=System;Monitor
+Keywords=disk;dockapp;windowmaker

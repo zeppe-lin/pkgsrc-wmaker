@@ -1,0 +1,13 @@
+diff --git a/wmnetload/configure.in b/wmnetload/configure.in
+index 9cae2ad..f3de07f 100644
+--- a/wmnetload/configure.in
++++ b/wmnetload/configure.in
+@@ -101,7 +101,7 @@ AC_ARG_WITH(incs-from,
+ 	[  --with-incs-from        compiler header file search path],
+ 	[inc_search_path=" -I $withval $inc_search_path"])
+ 
+-LIBRARY_SEARCH_PATH="$lib_search_path -L/usr/local/lib"
++LIBRARY_SEARCH_PATH="$lib_search_path"
+ LIBRARY_RPATH=`echo "$LIBRARY_SEARCH_PATH" | sed 's/[ *]-L[ *]/:/g'`
+ HEADER_SEARCH_PATH="$inc_search_path -I/usr/local/include"
+ 

@@ -1,0 +1,8 @@
+drwxr-xr-x	root/root	usr/
+drwxr-xr-x	root/root	usr/share/
+drwxr-xr-x	root/root	usr/share/WindowMaker/
+drwxr-xr-x	root/root	usr/share/WindowMaker/Themes/
+drwxr-xr-x	root/root	usr/share/WindowMaker/Themes/PineWMv2.themed/
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/PineWMv2.themed/solarisdolphins_olive.png
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/PineWMv2.themed/style
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/PineWMv2.themed/tile-earthy.png

@@ -1,0 +1,25 @@
+# Description: Dockapp that displays calendar clock
+# URL:         https://www.dockapps.net/wmcalclock
+# Depends on:  xorg-libxpm
+
+name=wmcalclock
+version=1.25
+release=1
+source="https://www.dockapps.net/download/wmCalClock-$version.tar.gz
+	wmcalclock-common.patch
+	wmcalclock-Makefile.patch
+	wmcalclock-wmCalClock.1.patch
+	wmcalclock.desktop"
+
+build() {
+	cd wmCalClock-$version
+
+	patch -Np1 -i $SRC/wmcalclock-common.patch
+	patch -Np1 -i $SRC/wmcalclock-Makefile.patch
+	patch -Np1 -i $SRC/wmcalclock-wmCalClock.1.patch
+
+	make -C Src CFLAGS="$CFLAGS" PREFIX=/usr MANPREFIX=/usr/share/man \
+		DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/applications $SRC/$name.desktop
+}

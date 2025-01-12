@@ -1,0 +1,8 @@
+--- a/WindowMaker/Styles/Interlace.style	2024-04-07 19:13:24.000000000 +0300
++++ b/WindowMaker/Styles/Interlace.style	2024-04-16 03:41:51.315822637 +0300
+@@ -26,5 +26,4 @@
+   IconTitleColor = "#8a94b0";
+   IconTitleBack = "#0b0f22";
+   MenuStyle = flat;
+-  WorkspaceBack = (mdgradient, black, black, black, "#111133");
+ }

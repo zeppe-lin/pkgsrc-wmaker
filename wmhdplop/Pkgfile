@@ -1,0 +1,23 @@
+# Description: WindowMaker dockapp to monitor hard drives
+# URL:         https://www.dockapps.net/wmhdplop
+# Depends on:  xorg-libxpm
+
+name=wmhdplop
+version=0.9.12
+release=1
+source="https://www.dockapps.net/download/$name-$version.tar.gz
+	wmhdplop-0.9.12-alt-hddtemp.patch"
+
+build() {
+	patch -d $name-$version -p2 -i $SRC/wmhdplop-0.9.12-alt-hddtemp.patch
+
+	mkdir build; cd build
+
+	autoreconf -fi ../$name-$version
+	../$name-$version/configure  \
+		--prefix=/usr        \
+		--disable-gkrellm    \
+
+	make V=1
+	make DESTDIR=$PKG install
+}

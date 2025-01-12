@@ -1,0 +1,20 @@
+diff '--color=auto' -pruN wmacpi-2.4/libacpi.d /mnt/upstream/windowmaker/dockapps/wmacpi/libacpi.d
+--- wmacpi-2.4/libacpi.d	1970-01-01 03:00:00.000000000 +0300
++++ /mnt/upstream/windowmaker/dockapps/wmacpi/libacpi.d	2024-12-29 15:03:02.054983069 +0200
+@@ -0,0 +1 @@
++libacpi.o: libacpi.c libacpi.h
+Binary files wmacpi-2.4/libacpi.o and /mnt/upstream/windowmaker/dockapps/wmacpi/libacpi.o differ
+Binary files wmacpi-2.4/wmacpi and /mnt/upstream/windowmaker/dockapps/wmacpi/wmacpi differ
+Binary files wmacpi-2.4/wmacpi-cli and /mnt/upstream/windowmaker/dockapps/wmacpi/wmacpi-cli differ
+diff '--color=auto' -pruN wmacpi-2.4/wmacpi-cli.d /mnt/upstream/windowmaker/dockapps/wmacpi/wmacpi-cli.d
+--- wmacpi-2.4/wmacpi-cli.d	1970-01-01 03:00:00.000000000 +0300
++++ /mnt/upstream/windowmaker/dockapps/wmacpi/wmacpi-cli.d	2024-12-29 15:03:02.085983919 +0200
+@@ -0,0 +1 @@
++wmacpi-cli.o: wmacpi-cli.c libacpi.h
+Binary files wmacpi-2.4/wmacpi-cli.o and /mnt/upstream/windowmaker/dockapps/wmacpi/wmacpi-cli.o differ
+diff '--color=auto' -pruN wmacpi-2.4/wmacpi.d /mnt/upstream/windowmaker/dockapps/wmacpi/wmacpi.d
+--- wmacpi-2.4/wmacpi.d	1970-01-01 03:00:00.000000000 +0300
++++ /mnt/upstream/windowmaker/dockapps/wmacpi/wmacpi.d	2024-12-29 15:03:02.010981862 +0200
+@@ -0,0 +1 @@
++wmacpi.o: wmacpi.c libacpi.h master.xpm
+Binary files wmacpi-2.4/wmacpi.o and /mnt/upstream/windowmaker/dockapps/wmacpi/wmacpi.o differ

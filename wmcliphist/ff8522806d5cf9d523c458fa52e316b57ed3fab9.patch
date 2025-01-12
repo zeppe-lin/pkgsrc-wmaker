@@ -1,0 +1,544 @@
+diff '--color=auto' -pruN dockapps/ChangeLog /mnt/upstream/windowmaker/dockapps/wmcliphist/ChangeLog
+--- dockapps/ChangeLog	2014-11-23 16:59:59.000000000 +0200
++++ /mnt/upstream/windowmaker/dockapps/wmcliphist/ChangeLog	2024-04-20 06:22:24.655907766 +0300
+@@ -3,7 +3,7 @@
+ - Add manpage from Debian.
+ - Add -b command line option to select which clipboard to manage.
+ - Now maintained by Window Maker Developers team
+-  <wmaker-dev@lists.windowmaker.org>.
++  <wmaker-dev@googlegroups.com>.
+ 
+ 21/03/2009: v2.0
+ - Gentoo patches by Samuli Suominen integrated
+diff '--color=auto' -pruN dockapps/clipboard.c /mnt/upstream/windowmaker/dockapps/wmcliphist/clipboard.c
+--- dockapps/clipboard.c	2014-11-23 16:59:59.000000000 +0200
++++ /mnt/upstream/windowmaker/dockapps/wmcliphist/clipboard.c	2024-04-20 06:22:24.655907766 +0300
+@@ -101,15 +101,6 @@ my_get_selection_text(GtkClipboard *cb,
+ gboolean
+ my_get_xselection(GtkWidget *window, GdkEvent *event)
+ {
+-	GdkAtom		atom;
+-	gint		format;
+-	size_t		length;
+-	gchar		*content = NULL;
+-
+-	/* previous clipboard content */
+-	static size_t	old_content_len = 0;
+-	static gchar	*old_content = "";
+-
+ 
+ 	begin_func("my_get_xselection");
+ 
+@@ -117,40 +108,6 @@ my_get_xselection(GtkWidget *window, Gdk
+ 			my_get_selection_text, NULL);
+ 
+ 	return_val(TRUE);
+-
+-	length = (size_t) gdk_selection_property_get(gtk_widget_get_window(window),
+-			(guchar **) &content, &atom, &format);
+-
+-	if (length > 0) {
+-		if ((length != old_content_len ||
+-				memcmp(content, old_content, length) != 0) &&
+-		    !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_app_clip_ignore))) {
+-			/* new data in clipboard */
+-			/* store new content for future comparation */
+-			if (old_content_len > 0)
+-				g_free(old_content);
+-			old_content = content;
+-			old_content_len = length;
+-
+-			/* process item */
+-			/* process_item(content, length, 0, TRUE); */
+-		} else {
+-			/* no new data */
+-			g_free(content);
+-		}
+-
+-		/* when clipboard is locked, set selection owener to myself */
+-		    if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_app_clip_ignore)) ||
+-			gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_app_clip_lock))) {
+-			if (gtk_selection_owner_set(dock_app,
+-						clipboard,
+-						GDK_CURRENT_TIME) == 0)
+-				selected = NULL;
+-		}
+-
+-	}
+-
+-	return_val(TRUE);
+ }
+ 
+ 
+diff '--color=auto' -pruN dockapps/gui.c /mnt/upstream/windowmaker/dockapps/wmcliphist/gui.c
+--- dockapps/gui.c	2014-11-23 16:59:59.000000000 +0200
++++ /mnt/upstream/windowmaker/dockapps/wmcliphist/gui.c	2024-04-20 06:22:24.655907766 +0300
+@@ -27,6 +27,9 @@ GtkWidget	*menu_app_clip_ignore;
+ GtkWidget	*menu_app_exit;
+ GtkWidget	*menu_app_save;
+ 
++/* event box */
++GtkWidget *event;
++
+ /* button */
+ GtkWidget	*button;
+ 
+@@ -171,8 +174,8 @@ menu_item_add(gchar *content, gint locke
+ 		}
+ 
+ 		history_items = g_list_remove_link(history_items, list_node);
+-		gtk_container_remove(GTK_CONTAINER(hist_item->menu),
+-				hist_item->menu_item);
++/*		gtk_container_remove(GTK_CONTAINER(hist_item->menu),
++				hist_item->menu_item); */
+ 		gtk_widget_destroy(hist_item->menu_item);
+ 		g_free(hist_item->content);
+ 		g_free(hist_item);
+@@ -284,6 +287,7 @@ menu_app_item_click(GtkWidget *menuitem,
+ 			history_free();
+ 			rcconfig_free();
+ 
++			gtk_main_quit();
+ 			exit(0);
+ 			return_val(TRUE);
+ 	}
+@@ -332,63 +336,13 @@ button_press(GtkWidget *widget, GdkEvent
+ }
+ 
+ 
+-
+ /* ==========================================================================
+  *                                                            message dialogs
+  */
+ 
+-static GMainLoop	*loop;
+-static gint		button_pressed;
+-
+-
+-static gboolean
+-dialog_button_press(GtkWidget *button, gpointer data)
+-{
+-	begin_func("dialog_button_press");
+-
+-	button_pressed = GPOINTER_TO_INT(data);
+-	g_main_quit(loop);
+-
+-	return_val(TRUE);
+-}
+-
+-
+-
+-static gboolean
+-dialog_handle_key_press_event(GdkEventKey *event, gpointer data, guint key)
+-{
+-	if(event->type != GDK_KEY_PRESS)
+-		return_val(FALSE);
+-	if(event->keyval != key)
+-		return_val(FALSE);
+-	button_pressed = GPOINTER_TO_INT(data);
+-	g_main_quit(loop);
+-
+-	return_val(TRUE);
+-}
+-
+-
+-
+-static gboolean
+-dialog_key_press_yes(GtkWidget *button, GdkEventKey *event, gpointer data)
+-{
+-	begin_func("dialog_key_press_yes");
+-	return dialog_handle_key_press_event(event, data, GDK_KEY_Return);
+-}
+-
+-
+-
+-static gboolean
+-dialog_key_press_no(GtkWidget *button, GdkEventKey *event, gpointer data)
+-{
+-	begin_func("dialog_key_press_no");
+-	return dialog_handle_key_press_event(event, data, GDK_KEY_Escape);
+-}
+-
+-
+ 
+ /*
+- * open dialog with specified message andbuttons
++ * open dialog with specified message and buttons
+  * and return number of button pressed
+  */
+ gint
+@@ -397,60 +351,54 @@ show_message(gchar *message, char *title
+ {
+ 	GtkWidget	*dialog,
+ 			*label,
+-			*button_0,
+-			*button_1,
+-			*button_2;
++			*content_area;
++	gint		result;
++	gint		button_pressed = 1;
+ 
+ 	begin_func("show_message");
+ 
+ 	/* create the main widgets */
+ 	dialog = gtk_dialog_new();
+-	label = gtk_label_new(message);
+ 
+-	/* create buttons and set signals */
+-	gtk_dialog_add_button(GTK_DIALOG(dialog), b0_text, 0);
+-	button_0 = gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog), 0);
+-	g_signal_connect(G_OBJECT(button_0), "clicked",
+-			G_CALLBACK(dialog_button_press),
+-			GINT_TO_POINTER(0));
+-	if (!b2_text) {
+-		g_signal_connect(G_OBJECT(dialog), "key-press-event",
+-				G_CALLBACK(dialog_key_press_yes),
+-				GINT_TO_POINTER(0));
+-	}
++	content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+ 
+-	if (b1_text != NULL) {
+-		gtk_dialog_add_button(GTK_DIALOG(dialog), b1_text, 1);
+-		button_1 = gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog), 1);
+-		g_signal_connect(G_OBJECT(button_1), "clicked",
+-				G_CALLBACK(dialog_button_press),
+-				GINT_TO_POINTER(1));
+-		if (!b2_text) {
+-			g_signal_connect(G_OBJECT(dialog), "key-press-event",
+-					G_CALLBACK(dialog_key_press_no),
+-					GINT_TO_POINTER(1));
+-		}
+-	}
++	/* Show the message */
++	label = gtk_label_new(message);
++	gtk_container_add(GTK_CONTAINER (content_area), label);
++	gtk_widget_show(label);
+ 
+-	if (b2_text) {
+-		gtk_dialog_add_button(GTK_DIALOG(dialog), b2_text, 2);
+-		button_2 = gtk_dialog_get_widget_for_response(GTK_DIALOG(dialog), 2);
+-		g_signal_connect(G_OBJECT(button_2), "clicked",
+-				G_CALLBACK(dialog_button_press),
+-				GINT_TO_POINTER(2));
+-	}
++	/* add the button */
++	gtk_dialog_add_button(GTK_DIALOG (dialog), b0_text, 0);
++	if(b1_text != NULL) gtk_dialog_add_button(GTK_DIALOG (dialog), b1_text, 1);
++	if(b2_text != NULL) gtk_dialog_add_button(GTK_DIALOG (dialog), b2_text, 2);
+ 
+-	/* add the label, and show everything we've added to the dialog. */
+-	gtk_misc_set_padding(&GTK_LABEL(label)->misc, 10, 10);
+-	gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), label);
+ 	gtk_widget_show_all(dialog);
+ 
+-	/* set window title */
++	/* set the dialog title */
+ 	gtk_window_set_title(GTK_WINDOW(dialog), title);
+ 
+-	loop = g_main_new(FALSE);
+-	g_main_run(loop);
+-	g_main_destroy(loop);
++	/* set the dialog modal and transient */
++/*	gtk_window_set_modal(GTK_WINDOW (dialog), TRUE);*/
++	gtk_window_set_transient_for(GTK_WINDOW (dialog), GTK_WINDOW (dock_app));
++
++	/*wait for the user response */
++	result = gtk_dialog_run (GTK_DIALOG (dialog));
++	switch (result)
++	{
++		case 0:
++			button_pressed = 0;
++			break;
++		case 1:
++			button_pressed = 1;
++			break;
++		case 2:
++			button_pressed = 2;
++			break;
++		default:
++			break;
++	}
++
++	/*destroy the dialog box, when the user responds */
+ 	gtk_widget_destroy(dialog);
+ 
+ 	return_val(button_pressed);
+diff '--color=auto' -pruN dockapps/history.c /mnt/upstream/windowmaker/dockapps/wmcliphist/history.c
+--- dockapps/history.c	2014-11-23 16:59:59.000000000 +0200
++++ /mnt/upstream/windowmaker/dockapps/wmcliphist/history.c	2024-04-20 06:22:24.655907766 +0300
+@@ -148,7 +148,7 @@ exec_item(char *content, ACTION *action)
+ 	if (confirm_exec) {
+ 		msg_buf = g_new0(char, strlen(exec_buf) + 256);
+ 		sprintf(msg_buf, "Do you want to perform the "
+-				"following action?\n\n%s",
++				"following action?\n\n%s\n",
+ 				exec_buf);
+ 		msg_result = show_message(msg_buf,
+ 				"wmcliphist", "Yes", "No", NULL);
+@@ -360,8 +360,8 @@ history_free()
+ 	list_node = g_list_last(history_items);
+ 	while (list_node) {
+ 		hist_item = (HISTORY_ITEM *)list_node->data;
+-		gtk_container_remove(GTK_CONTAINER(hist_item->menu),
+-				hist_item->menu_item);
++/*		gtk_container_remove(GTK_CONTAINER(hist_item->menu),
++				hist_item->menu_item); */
+ 		gtk_widget_destroy(hist_item->menu_item);
+ 		g_free(hist_item->content);
+ 		g_free(hist_item);
+diff '--color=auto' -pruN dockapps/Makefile /mnt/upstream/windowmaker/dockapps/wmcliphist/Makefile
+--- dockapps/Makefile	2014-11-23 16:59:59.000000000 +0200
++++ /mnt/upstream/windowmaker/dockapps/wmcliphist/Makefile	2024-04-20 06:22:24.655907766 +0300
+@@ -1,10 +1,11 @@
+ srcCC ?= gcc
++PKG_CONFIG ?= pkg-config
+ INSTALL = install
+ PREFIX = /usr/local
+ BINDIR = $(PREFIX)/bin
+ DATADIR = $(PREFIX)/share/wmcliphist
+ MAN1DIR = $(PREFIX)/share/man/man1
+-INCLUDES = `pkg-config --cflags gtk+-3.0 x11`
++INCLUDES = `$(PKG_CONFIG) --cflags gtk+-3.0 x11`
+ 
+ # for normal use
+ CFLAGS += -Wall -ansi -pedantic $(INCLUDES) -DDATADIR=\"$(DATADIR)\"
+@@ -13,10 +14,10 @@ DEBUG =
+ # for debuggind purposes
+ # ISO doesn't support macros with variable number of arguments so -pedantic
+ # must not be used
+-#CFLAGS += -Wall -g -ansi $(INCLUDES) -DFNCALL_DEBUG
++#CFLAGS += -Wall -g -ansi $(INCLUDES) -DFNCALL_DEBUG -DDATADIR=\"$(DATADIR)\"
+ #DEBUG = debug.o
+ 
+-LIBS = `pkg-config --libs gtk+-3.0 x11`
++LIBS = `$(PKG_CONFIG) --libs gtk+-3.0 x11`
+ 
+ OBJECTS = wmcliphist.o clipboard.o gui.o rcconfig.o history.o hotkeys.o utils.o $(DEBUG)
+ TARGET = wmcliphist
+diff '--color=auto' -pruN dockapps/wmcliphist.c /mnt/upstream/windowmaker/dockapps/wmcliphist/wmcliphist.c
+--- dockapps/wmcliphist.c	2014-11-23 16:59:59.000000000 +0200
++++ /mnt/upstream/windowmaker/dockapps/wmcliphist/wmcliphist.c	2024-04-20 06:22:24.655907766 +0300
+@@ -45,55 +45,11 @@ static void
+ wmcliphist_exit(gint code)
+ {
+ 	begin_func("wmcliphist_exit");
++	gtk_main_quit();
+ 	exit(code);
+ 	return_void();
+ }
+ 
+-/* gtk3 dockapp code based on wmpasman by Brad Jorsch
+- * <anomie@users.sourceforge.net>
+- * http://sourceforge.net/projects/wmpasman */
+-
+-GtkWidget *foo_create_main_icon_window(GtkWidget *mw, unsigned int s)
+-{
+-	Display *d;
+-	GdkDisplay *display;
+-	GtkWidget *foobox;
+-	unsigned int dummy3;
+-	Window mainwin, iw, p, dummy1, *dummy2, w;
+-	XWMHints *wmHints;
+-
+-	display = gdk_display_get_default();
+-	foobox = gtk_window_new(GTK_WINDOW_POPUP);
+-
+-	gtk_window_set_wmclass(GTK_WINDOW(mw), g_get_prgname(), "DockApp");
+-	gtk_widget_set_size_request(foobox, s, s);
+-
+-	gtk_widget_realize(mw);
+-	gtk_widget_realize(foobox);
+-
+-	d = GDK_DISPLAY_XDISPLAY(display);
+-	mainwin = GDK_WINDOW_XID(gtk_widget_get_window(mw));
+-	iw = GDK_WINDOW_XID(gtk_widget_get_window(foobox));
+-	XQueryTree(d, mainwin, &dummy1, &p, &dummy2, &dummy3);
+-	if (dummy2)
+-		XFree(dummy2);
+-	w = XCreateSimpleWindow(d, p, 0, 0, 1, 1, 0, 0, 0);
+-	XReparentWindow(d, mainwin, w, 0, 0);
+-	gtk_widget_show(mw);
+-	gtk_widget_show(foobox);
+-	wmHints = XGetWMHints(d, mainwin);
+-	if (!wmHints)
+-		wmHints = XAllocWMHints();
+-	wmHints->flags |= IconWindowHint;
+-	wmHints->icon_window = iw;
+-	XSetWMHints(d, mainwin, wmHints);
+-	XFree(wmHints);
+-	XReparentWindow(d, mainwin, p, 0, 0);
+-	XDestroyWindow(d, w);
+-
+-	return foobox;
+-}
+-
+ /*
+  * main func
+  */
+@@ -102,11 +58,13 @@ main(int argc, char **argv)
+ {
+ 	gint	i = 1, res;
+ 	gchar	*arg;
+-	gchar   *icon_file;
++	gchar *icon_file;
+ 	GList	*list_node;
+ 	int	icon_number = 0;
+ 	int	icon_size = 60;
+ 	gboolean dump_only = FALSE;
++	XWMHints mywmhints;
++	GdkDisplay *display;
+ 
+ #ifdef	FNCALL_DEBUG
+ 	debug_init_nothreads();
+@@ -196,12 +154,24 @@ main(int argc, char **argv)
+ 	/* initialize Gtk */
+ 	gtk_init(&argc, &argv);
+ 
+-
+ 	/* create main window */
+ 	main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+ 
++	/* set the window title */
++	gtk_window_set_title(GTK_WINDOW(main_window), "wmcliphist");
++
+ 	/* creat dock icon */
+-	dock_app = foo_create_main_icon_window(main_window, icon_size);
++	dock_app = main_window;
++
++	/* add event box to main window*/
++	event = gtk_event_box_new();
++	gtk_container_add(GTK_CONTAINER(dock_app), event);
++
++	/* set the default window size */
++	gtk_window_set_default_size(GTK_WINDOW(dock_app), icon_size, icon_size);
++
++	/* set default icon */
++	icon_file = "ico_60x060_gray.png";
+ 
+ 	if (icon_size) {
+ 		/* create icon_mask */
+@@ -243,9 +213,38 @@ main(int argc, char **argv)
+ 		icon_file = g_strconcat(DATADIR"/", icon_file, NULL);
+ 		pixmap = gtk_image_new_from_file(icon_file);
+ 		gtk_widget_show(pixmap);
+-		gtk_container_add(GTK_CONTAINER(dock_app), pixmap);
++		gtk_container_add(GTK_CONTAINER(event), pixmap);
++	}
++
++	/* use only mouse events */
++	gtk_widget_add_events(dock_app, GDK_BUTTON_PRESS_MASK);
++
++	gtk_widget_show(dock_app);
++	gtk_widget_show_all(main_window);
++
++	/* transparenter Hintergrund für pixmap*/
++	if (icon_size) {
++		cairo_region_t *region;
++		cairo_surface_t *surface;
++
++		surface = cairo_image_surface_create_from_png(icon_file);
++		region = gdk_cairo_region_create_from_surface(surface);
++		gdk_window_shape_combine_region(gtk_widget_get_window(dock_app),
++						region, 0, 0);
++
+ 	}
+ 
++	/* set the window as a dockapp*/
++	display = gdk_display_get_default();
++
++	mywmhints.icon_window = GDK_WINDOW_XID(gtk_widget_get_window(main_window));
++	mywmhints.window_group = GDK_WINDOW_XID(gtk_widget_get_window(main_window));
++	mywmhints.icon_x = 0;
++	mywmhints.icon_y = 0;
++	mywmhints.flags = IconWindowHint | StateHint;
++	mywmhints.initial_state = WithdrawnState;
++
++	XSetWMHints(GDK_DISPLAY_XDISPLAY(display), GDK_WINDOW_XID(gtk_widget_get_window(main_window)), &mywmhints);
+ 
+ 	/* create clipboard history menu */
+ 	menu_hist = gtk_menu_new();
+@@ -280,7 +279,6 @@ main(int argc, char **argv)
+ 
+ 	gtk_widget_show_all(menu_app);
+ 
+-
+ 	list_node = action_list;
+ 	while (list_node) {
+ 		ACTION	*action = list_node->data;
+@@ -317,6 +315,7 @@ main(int argc, char **argv)
+ 		gtk_menu_shell_insert(GTK_MENU_SHELL(menu_hist), separator, 1);
+ 	}
+ 
++
+ 	/* prepare colors and styles */
+ 	if (gdk_rgba_parse(&locked_color, locked_color_str) == FALSE) {
+ 		char	msg_str[128];
+@@ -329,6 +328,7 @@ main(int argc, char **argv)
+ 		gdk_rgba_parse(&locked_color, locked_color_str);
+ 	}
+ 
++
+ 	/* set clipboard */
+ 	if (strcmp(clipboard_str, "PRIMARY") == 0) {
+ 		clipboard = GDK_SELECTION_PRIMARY;
+@@ -372,26 +372,6 @@ main(int argc, char **argv)
+ 	}
+ 
+ 
+-	if (icon_size) {
+-		cairo_region_t *region;
+-		cairo_surface_t *surface;
+-
+-		/* connect signal for menu popup */
+-		gtk_widget_add_events(dock_app, GDK_BUTTON_PRESS_MASK);
+-		g_signal_connect(G_OBJECT(dock_app),
+-                               "event",
+-                               G_CALLBACK(button_press),
+-                               G_OBJECT(menu_hist));
+-
+-		surface = cairo_image_surface_create_from_png(icon_file);
+-		region = gdk_cairo_region_create_from_surface(surface);
+-		gdk_window_shape_combine_region(gtk_widget_get_window(dock_app),
+-						region, 0, 0);
+-
+-
+-	}
+-
+-
+ 	/* run clipboard monitor */
+ 	g_signal_connect(G_OBJECT(main_window),
+ 			"selection_received",
+@@ -416,6 +396,12 @@ main(int argc, char **argv)
+ 			G_CALLBACK(selection_handle),
+ 			NULL);
+ 
++	/* connect signal for menu popup */
++	g_signal_connect(G_OBJECT(dock_app),
++                               "event",
++                               G_CALLBACK(button_press),
++                               NULL);
++
+ 	g_signal_connect(G_OBJECT(dock_app),
+ 			"destroy",
+ 			G_CALLBACK(wmcliphist_exit),
+diff '--color=auto' -pruN dockapps/wmcliphist.h /mnt/upstream/windowmaker/dockapps/wmcliphist/wmcliphist.h
+--- dockapps/wmcliphist.h	2014-11-23 16:59:59.000000000 +0200
++++ /mnt/upstream/windowmaker/dockapps/wmcliphist/wmcliphist.h	2024-04-20 06:22:24.655907766 +0300
+@@ -281,6 +281,9 @@ extern GtkWidget	*menu_app_save;
+ /* button */
+ extern GtkWidget	*button;
+ 
++/* event */
++extern GtkWidget	*event;
++
+ /* pixmap */
+ extern GtkWidget	*pixmap;
+ 
+@@ -290,7 +293,6 @@ extern GtkWidget	*pixmap;
+ gboolean
+ button_press(GtkWidget *widget, GdkEvent *event, gpointer data);
+ 
+-
+ /*
+  * checks, if there is already such item in menu,
+  * in which case it moves it to the begining

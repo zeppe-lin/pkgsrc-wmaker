@@ -1,0 +1,105 @@
+diff --git a/wmhdplop/devnames.c b/wmhdplop/devnames.c
+index 5a0b81c..c4b7134 100644
+--- a/wmhdplop/devnames.c
++++ b/wmhdplop/devnames.c
+@@ -213,7 +213,7 @@ int device_id_from_name(const char *devname__, unsigned *pmajor, unsigned *pmino
+ 
+ 
+ /* add a hard-drive if it is a regular ide/scsi/md disk/partition, or return NULL */
+-static DiskList *create_device(unsigned major, unsigned minor, const char *mtab_name) {
++static DiskList *create_device(unsigned major, unsigned minor, const char *mtab_name, const char *devname) {
+   DiskList *dl;
+   char dev_path[512];
+   ALLOC_OBJ(dl);
+@@ -232,6 +232,13 @@ static DiskList *create_device(unsigned major, unsigned minor, const char *mtab_
+   dl->next = NULL;
+   if (dl->part_id == 0)
+     dl->enable_hddtemp = 1;
++  /* don't pass translated name to hddtemp as it might uses own name scheme */
++  if (dl->enable_hddtemp == 1) {
++    if (devname && strlen(devname)) dl->orig_name = strdup(devname);
++    else {
++      char s[512]; short_name_for_device(major,minor,s); dl->orig_name = strdup(s);
++    }
++  }
+   return dl;
+ }
+ 
+@@ -242,17 +249,17 @@ int add_device_by_name(const char *devname, const char *mtab_name) {
+   BLAHBLAH(1,printf("add_device_by_name(%s,%s)\n", devname, mtab_name));
+   if (device_id_from_name(devname, &major, &minor) != 0) return -1;
+ 
+-  return add_device_by_id(major,minor,mtab_name);
++  return add_device_by_id(major,minor,mtab_name,devname);
+ }
+ 
+ /* add a device (after checking that it is a known device type) */
+-int add_device_by_id(unsigned major, unsigned minor, const char *mtab_name) {
++int add_device_by_id(unsigned major, unsigned minor, const char *mtab_name, const char *devname) {
+   DiskList *dl, *next, *prev;
+   BLAHBLAH(1,printf("add_device_by_id(%d,%d,%s)\n", major, minor,mtab_name));
+   /* already known ? */
+   if (find_dev(major,minor)) return -1;
+     /* check for known ide/scsi/md disks and then create */
+-  dl = create_device(major, minor,  mtab_name); if (!dl) return -1;
++  dl = create_device(major, minor, mtab_name, devname); if (!dl) return -1;
+ 
+   for (next = dlist, prev = NULL; next; next=next->next) {
+     if (dl->hd_id > next->hd_id || (dl->hd_id == next->hd_id && dl->part_id > next->part_id)) break;
+diff --git a/wmhdplop/devnames.h b/wmhdplop/devnames.h
+index 15b0f73..b7331b9 100644
+--- a/wmhdplop/devnames.h
++++ b/wmhdplop/devnames.h
+@@ -5,7 +5,7 @@
+ #define IS_PARTITION(DL) ((DL)->part_id!=0)
+ 
+ typedef struct DiskList {
+-  char *name, *dev_path;
++  char *name, *dev_path, *orig_name;
+   unsigned major, minor;
+   int hd_id, part_id; /* part_id = 0 for disks */
+   int enable_hddtemp;
+@@ -27,7 +27,7 @@ int nb_hd_in_list();
+ int nb_dev_in_list();
+ int is_partition(unsigned major, unsigned minor);
+ int add_device_by_name(const char *devname, const char *mtab_name);
+-int add_device_by_id(unsigned major, unsigned minor, const char *mtab_name);
++int add_device_by_id(unsigned major, unsigned minor, const char *mtab_name, const char *devname);
+ void add_swap(const char *swapdev);
+ int device_info(unsigned major, unsigned minor, char *name, int *hd_id, int *part_id);
+ strlist *swap_list();
+diff --git a/wmhdplop/procstat.c b/wmhdplop/procstat.c
+index d51b53c..770999f 100644
+--- a/wmhdplop/procstat.c
++++ b/wmhdplop/procstat.c
+@@ -200,7 +200,7 @@ void scan_all_hd(int add_partitions) {
+         int hd_id, part_id;
+         /* on n'ajoute que les disques dont au moins une partoche etait dans mtab */
+         if (device_info(major,minor,NULL,&hd_id,&part_id) != 0 && part_id == 0 && find_id(hd_id,-1)) {
+-          add_device_by_id(major,minor,NULL);
++          add_device_by_id(major,minor,NULL,NULL);
+         }
+       }
+     }
+diff --git a/wmhdplop/wmhdplop.c b/wmhdplop/wmhdplop.c
+index bbbe971..d5c79a8 100644
+--- a/wmhdplop/wmhdplop.c
++++ b/wmhdplop/wmhdplop.c
+@@ -271,7 +271,7 @@ static void query_hddtemp(App *app) {
+     for (dl = first_hd_in_list(), cnt = 0; dl; dl = next_hd_in_list(dl), cnt++) {
+       if (dl->enable_hddtemp) {
+         int found = 0;
+-        if ((s=strstr(buff, dl->dev_path))) { found = 1; s+= strlen(dl->name); }
++        if ((s=strstr(buff, dl->orig_name))) { found = 1; s+= strlen(dl->name); }
+         if (found) {
+           s=strchr(s,'|');
+           if (s && ((s=strchr(s+1,'|')))) {
+@@ -296,7 +296,7 @@ static void query_hddtemp(App *app) {
+             if (p) *p = oldv; /* or bug... */
+           }
+         } else {
+-          ONLY_NTIMES(4,fprintf(stderr, "could not find device '%s' in the output of hddtemp: '%s'\n", dl->name, buff));
++          ONLY_NTIMES(4,fprintf(stderr, "could not find device '%s (alias %s)' in the output of hddtemp: '%s'\n", dl->orig_name, dl->name, buff));
+         }
+       }
+     }

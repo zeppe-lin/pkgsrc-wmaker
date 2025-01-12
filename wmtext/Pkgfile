@@ -1,0 +1,20 @@
+# Description: Dockapp that displays the output of a shell command
+# URL:         http://fccode.free.fr/dockapps/#wmtext
+# Depends on:  libdockapp
+
+name=wmtext
+version=3
+release=1
+source="http://fccode.free.fr/dockapps/wmtext-3.tbz2
+	wmtext.1
+	wmtext.desktop"
+
+build() {
+	sed -i "/CFLAGS/s/=/= $CFLAGS/" wmtext-$version/Makefile
+
+	make -C wmtext-$version all
+
+	install -m 0755 -Dt $PKG/usr/bin                wmtext-$version/wmtext
+	install -m 0644 -Dt $PKG/usr/share/man/man1     wmtext.1
+	install -m 0644 -Dt $PKG/usr/share/applications wmtext.desktop
+}

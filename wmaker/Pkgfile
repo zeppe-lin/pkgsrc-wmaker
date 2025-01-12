@@ -1,0 +1,76 @@
+# Description: Window manager for X emulating the NeXTSTEP UI
+# URL:         https://windowmaker.org/
+# Depends on:  giflib imagemagick libexif pango xorg-libxinerama xorg-libxmu xorg-libxpm xorg-libxres
+
+name=wmaker
+version=0.96.0-da676c9
+release=1
+#source=https://github.com/window-maker/wmaker/releases/download/wmaker-$version/WindowMaker-$version.tar.gz
+source="https://github.com/window-maker/$name/archive/${version#*-}/$name-$version.tar.gz
+	0001-wmaker-fix-stacking-order-of-dock-and-fullscreen.patch
+	0002-wmaker-allow-alt-tabbed-windows-over-fullscreen.patch
+
+	wmgenmenu.patch
+
+	Blau.patch
+	DarkRed.patch
+	Interlace.patch
+	Pastel.patch
+	VioletBlue.patch
+
+	WindowMaker
+	WMRootMenu
+
+	swback.png
+	swtile.png"
+
+build() {
+	patch -d wmaker-* -p1 -R -i $SRC/0001-wmaker-fix-stacking-order-of-dock-and-fullscreen.patch
+	patch -d wmaker-* -p1 -R -i $SRC/0002-wmaker-allow-alt-tabbed-windows-over-fullscreen.patch
+
+	patch -d wmaker-* -p1 -i $SRC/wmgenmenu.patch
+
+	patch -d wmaker-* -p1 -i $SRC/Blau.patch
+	patch -d wmaker-* -p1 -i $SRC/DarkRed.patch
+	patch -d wmaker-* -p1 -i $SRC/Interlace.patch
+	patch -d wmaker-* -p1 -i $SRC/Pastel.patch
+	patch -d wmaker-* -p1 -i $SRC/VioletBlue.patch
+
+	export LINGUAS=' '
+	export CONFIG_SHELL=/bin/bash
+
+	mkdir build; cd build
+
+	autoreconf -fi ../wmaker-*
+	../wmaker-*/configure      \
+		--prefix=/usr      \
+		--sysconfdir=/etc  \
+		--disable-static   \
+		--disable-tiff     \
+		--enable-modelock  \
+		--enable-xinerama  \
+		--enable-randr     \
+		--enable-usermenu  \
+
+	make DESTDIR=$PKG install
+
+	sed -i '/^\s*GenerateMenu$/d'            $PKG/usr/bin/wmaker.inst
+	sed -i 's|/bin/mktemp|/usr/bin/mktemp|g' $PKG/usr/bin/wm-oldmenu2new
+
+	# configs
+	install -m 0644 -Dt $PKG/etc/WindowMaker/ \
+		$SRC/WindowMaker $SRC/WMRootMenu
+
+	# overwrite some pngs with restyled one
+	cp $SRC/sw*.png $PKG/usr/share/WindowMaker/Pixmaps/
+
+	# remove i18n
+	rm $PKG/usr/share/WindowMaker/menu.*
+	rm $PKG/usr/share/WindowMaker/plmenu.*
+	rm $PKG/usr/share/WindowMaker/appearance.menu.*
+	rm $PKG/usr/share/WindowMaker/background.menu.*
+
+	# remove junk
+	find $PKG -name 'README*' -delete
+	rmdir $PKG/usr/share/locale
+}

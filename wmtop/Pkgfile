@@ -1,0 +1,27 @@
+# Description: Dockapp version of the CPU monitoring utility top
+# URL:         http://wmtop.sourceforge.net/
+# Depends on:  libdockapp
+
+name=wmtop
+version=0.85
+release=1
+source="https://www.dockapps.net/download/wmtop-$version.tar.gz
+	c5c755d2cf38e8b5b2736c55a23a78d35e7401a8.patch
+	manpage.patch
+	wmtop.desktop"
+
+build() {
+	patch -d dockapps-be3f170 -Np1 -i $SRC/c5c755d2cf38e8b5b2736c55a23a78d35e7401a8.patch
+	patch -d dockapps-be3f170 -Np2 -i $SRC/manpage.patch
+
+	mkdir build; cd build
+
+	autoreconf -fi ../dockapps-*
+	../dockapps-*/configure  \
+		--prefix=/usr    \
+
+	make V=1
+	make DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/applications $SRC/wmtop.desktop
+}

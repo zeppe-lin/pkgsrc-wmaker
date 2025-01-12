@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmsystemtray
+Comment=Dockapp that provides Freedesktop.org system tray
+Exec=wmsystemtray
+Categories=System
+Keywords=systray;dockapp;windowmaker

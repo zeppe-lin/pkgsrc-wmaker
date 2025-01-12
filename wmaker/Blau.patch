@@ -1,0 +1,36 @@
+--- a/WindowMaker/Themes/Blau.style	2024-01-25 07:28:20.000000000 +0200
++++ b/WindowMaker/Themes/Blau.style	2024-01-26 20:33:18.486187053 +0200
+@@ -15,13 +15,13 @@
+     "#555575",
+     "#939abd"
+   );
+-  ClipTitleFont = "lucida:pixelsize=10";
++  ClipTitleFont = "Verdana:bold:pixelsize=10";
+   ClipTitleColor = white;
+-  IconTitleFont = "Lucida:slant=0:weight=100:width=100:pixelsize=10";
++  IconTitleFont = "Arial,sans serif:pixelsize=9";
+   HighlightColor = "#ffffff";
+   MenuTextBack = (mhgradient, "#384246", "#707080", "#4a4a61");
+-  WindowTitleFont = "Courier:slant=0:weight=80:width=100:pixelsize=16";
+-  LargeDisplayFont = "Helvetica:slant=0:weight=80:width=100:pixelsize=48";
++  WindowTitleFont = "Trebuchet MS,sans serif:bold:pixelsize=12";
++  LargeDisplayFont = "Trebuchet MS,sans serif:pixelsize=24";
+   CClipTitleColor = gray60;
+   MenuStyle = flat;
+   ResizebarBack = (solid, "#989aa6");
+@@ -41,13 +41,13 @@
+   PTitleBack = (mhgradient, "#5a5c66", "rgb:70/72/7e", "rgb:45/47/4e");
+   MenuTitleColor = "#e8fd00";
+   UTitleColor = "#333333";
+-  MenuTitleFont = "FreeSans:slant=0:weight=200:width=100:pixelsize=18";
++  MenuTitleFont = "Trebuchet MS,sans serif:bold:pixelsize=12";
+   UTitleBack = (mhgradient, "#989aa6", "#9fa1b5", "#86879b");
+   WindowTitleExtendSpace = 0;
+   NormalCursor = (builtin, left_ptr);
+   PTitleColor = "#ffffff";
+   MenuTitleExtendSpace = 0;
+-  MenuTextFont = "sans serif:slant=0:weight=100:width=100:pixelsize=15";
++  MenuTextFont = "Trebuchet MS,sans serif:pixelsize=12";
+   WorkspaceBack = (solid, "#505075");
+   HighlightTextColor = "#000000";
+ }

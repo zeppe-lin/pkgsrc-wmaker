@@ -1,0 +1,14 @@
+drwxr-xr-x	root/root	usr/
+drwxr-xr-x	root/root	usr/share/
+drwxr-xr-x	root/root	usr/share/WindowMaker/
+drwxr-xr-x	root/root	usr/share/WindowMaker/Themes/
+drwxr-xr-x	root/root	usr/share/WindowMaker/Themes/BlueGlass.themed/
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/BlueGlass.themed/style
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/BlueGlass.themed/t3.png
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/BlueGlass.themed/t3.tiff
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/BlueGlass.themed/title_active.png
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/BlueGlass.themed/title_active.tiff
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/BlueGlass.themed/title_inactive.png
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/BlueGlass.themed/title_inactive.tiff
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/BlueGlass.themed/title_owner.png
+-rw-r--r--	root/root	usr/share/WindowMaker/Themes/BlueGlass.themed/title_owner.tiff

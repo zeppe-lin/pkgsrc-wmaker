@@ -1,0 +1,22 @@
+# Description: Dockapp mixer for OSS or ALSA
+# URL:         https://www.dockapps.net/wmix
+# Depends on:  alsa-lib xorg-libxpm xorg-libxrandr
+
+name=wmix
+version=3.5
+release=1
+source="https://www.dockapps.net/download/wmix-$version.tar.gz
+	fix-volume-adjustment.patch
+	wmix-desktop.patch"
+
+build() {
+	patch -d wmix-$version -Np1 -i $SRC/fix-volume-adjustment.patch
+	patch -d wmix-$version -Np1 -i $SRC/wmix-desktop.patch
+
+	mkdir build; cd build
+
+	../wmix-$version/configure --prefix=/usr
+
+	make V=1
+	make DESTDIR=$PKG install
+}

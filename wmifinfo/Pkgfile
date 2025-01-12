@@ -1,0 +1,21 @@
+# Description: Dockapp that displays information for all network interfaces
+# URL:         https://www.dockapps.net/wmifinfo
+# Depends on:  xorg-libxpm
+
+name=wmifinfo
+version=0.11
+release=1
+source="https://www.dockapps.net/download/$name-$version.tgz
+	fix-default-linker.patch
+	$name.desktop"
+
+build() {
+	cd $name-$version
+
+	patch -Np1 -i $SRC/fix-default-linker.patch
+
+	make ENABLE_NWM_SUPPORT=y CFLAGS="$CFLAGS"
+	make PREFIX=/usr DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/applications $SRC/$name.desktop
+}

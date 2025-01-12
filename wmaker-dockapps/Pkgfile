@@ -1,0 +1,12 @@
+# Description: Dockapps meta package for wmaker
+# URL:         https://zeppe-lin.github.io/
+# Depends on:  wmacpi wmaker wmbright wmcalc wmcalclock wmcliphist wmclockmon wmcpufreq wmcpuload wmdiskmon wmgtemp wmhdplop wmifinfo wmix wmmatrix wmmemload wmnd wmnetload wmressel wmstickynotes wmsystemtray wmtext wmtop wmwifi wmxres
+
+name=wmaker-dockapps
+version=0.1
+release=1
+source=
+
+build() {
+	mkdir -p $PKG/usr
+}

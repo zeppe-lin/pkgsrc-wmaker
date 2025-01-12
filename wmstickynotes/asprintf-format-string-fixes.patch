@@ -1,0 +1,25 @@
+Description: correct specifiers in `asprintf` format strings
+ `Note::id` is `long`, so use `%ld`.
+Author: Jeremy Sowden <azazel@debian.org>
+Last-Update: 2024-03-13
+
+--- a/wmstickynotes.c
++++ b/wmstickynotes.c
+@@ -227,7 +227,7 @@
+ 	char *filename;
+ 
+ 	if(store_notes) {
+-		asprintf(&filename, "%d", note->id);
++		asprintf(&filename, "%ld", note->id);
+ 		if(unlink(filename)) {
+ 			fprintf(stderr, "Error deleting note file '%s'.  errno: %d\n", filename, errno);
+ 		}
+@@ -314,7 +314,7 @@
+ 
+ 	text = gtk_text_buffer_get_text(text_buffer, &start, &end, FALSE);
+ 
+-	asprintf(&filename, "%d", note->id);
++	asprintf(&filename, "%ld", note->id);
+ 	file = fopen(filename, "w");
+ 
+ 	if(file) {

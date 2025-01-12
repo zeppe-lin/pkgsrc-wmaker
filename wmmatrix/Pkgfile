@@ -1,0 +1,28 @@
+# Description: View The Matrix in a Window Maker dock application
+# URL:         https://www.dockapps.net/wmmatrix
+# Depends on:  xorg-libxpm
+
+name=wmmatrix
+version=0.2
+release=1
+source="https://www.dockapps.net/download/wmMatrix-$version.tar.gz
+	Makefile.diff
+	move-variables.diff
+	wmMatrix.c.diff
+	wmMatrix.1
+	wmmatrix.desktop"
+
+build() {
+	patch -d wmMatrix-$version -p1 -i $SRC/Makefile.diff
+	patch -d wmMatrix-$version -p1 -i $SRC/wmMatrix.c.diff
+	patch -d wmMatrix-$version -p1 -i $SRC/move-variables.diff
+
+	make -C wmMatrix-$version clean
+	make -C wmMatrix-$version CFLAGS="$CFLAGS -Wno-implicit-function-declaration"
+
+	install -m 0755 -D wmMatrix-$version/wmMatrix \
+		$PKG/usr/bin/wmmatrix
+
+	install -m 0644 -D $SRC/wmMatrix.1 $PKG/usr/share/man/man1/wmmatrix.1
+	install -m 0644 -Dt $PKG/usr/share/applications $SRC/wmmatrix.desktop
+}

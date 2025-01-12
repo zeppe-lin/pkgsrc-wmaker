@@ -1,0 +1,26 @@
+From: Robert Luberda <robert@debian.org>
+Date: Sun, 14 Jan 2024 10:28:43 +0100
+Subject: Fix strncpy compiler warning
+
+Fix the following warning:
+ ./../src/drivers.c: In function 'linux_proc_list':
+ ../../src/drivers.c:459:5: warning: '__builtin_strncpy' specified bound 256 equals destination size [-Wstringop-t
+runcation]
+   459 |     strncpy(temp, devname, sizeof(temp));
+       |     ^
+---
+ src/drivers.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/drivers.c b/src/drivers.c
+index 30a08a7..7ad17f8 100644
+--- a/src/drivers.c
++++ b/src/drivers.c
+@@ -457,6 +457,7 @@ linux_proc_list(const char* devname, struct Devices* list)
+   if(devname)
+   {
+     strncpy(temp, devname, sizeof(temp));
++    temp[sizeof(temp)-1] = '\0';
+     for(p = strtok(temp, ","); p; p = strtok(NULL, ","))
+     {
+       ndev = (struct Devices*)malloc(sizeof(struct Devices));

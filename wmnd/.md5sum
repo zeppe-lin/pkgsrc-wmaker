@@ -1,0 +1,6 @@
+22814235fe20a2b3cc1900c7b2855b2b  01-Fix-missing-HOME-crash.patch
+b365c355ccff3a5a47c03527c106ee0d  02-Make-counters-64-bit.patch
+d1999468269552fd4b4c285f82dd54ca  03-Fix-compiler-warnings.patch
+2c5fceebb7a491331648d87cab4d3038  04-Fix-strncpy-warning.patch
+729d0208a7acc5ff185735f51020eefe  wmnd-0.4.18.tar.gz
+d18203ec93779a45452b765792afcc03  wmnd.desktop

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmressel
+Comment=Dockapp that changes X11 resolution
+Exec=wmressel
+Categories=System
+Keywords=screen;display;windowmaker

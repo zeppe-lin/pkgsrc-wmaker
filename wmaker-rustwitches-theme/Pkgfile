@@ -1,0 +1,19 @@
+# Description: Rustwitches WindowMaker theme
+# URL:         https://zeppe-lin.github.io/
+# Depends on:  wmaker
+
+name=wmaker-rustwitches-theme
+version=0.1
+release=1
+source="Rustwitches.themed/background.jpg
+	Rustwitches.themed/focused.jpg
+	Rustwitches.themed/icon.jpg
+	Rustwitches.themed/menu_item.jpg
+	Rustwitches.themed/menu_title.jpg
+	Rustwitches.themed/style
+	Rustwitches.themed/unfocused.jpg"
+
+build() {
+	install -m 0644 -Dt $PKG/usr/share/WindowMaker/Themes/Rustwitches.themed \
+		*.jpg style
+}

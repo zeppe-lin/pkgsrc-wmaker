@@ -1,0 +1,11 @@
+--- a/Src/Makefile	2024-10-13 10:09:04.287319586 +0300
++++ b/Src/Makefile	2024-10-13 10:26:39.601832639 +0300
+@@ -31,6 +31,6 @@ clean:
+ 	rm -f wmCalClock
+ 
+ install:: wmCalClock
+-	install -c -s -m 0755 wmCalClock $(DESTDIR)/bin
+-	install -c -m 0644 wmCalClock.1 $(DESTDIR)/man/man1 
++	install -m 0755 -D wmCalClock $(DESTDIR)$(PREFIX)/bin/wmcalclock
++	install -m 0644 -D wmCalClock.1 $(DESTDIR)$(MANPREFIX)/man1/wmcalclock.1
+ 

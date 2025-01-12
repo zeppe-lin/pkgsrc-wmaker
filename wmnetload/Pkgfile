@@ -1,0 +1,32 @@
+# Description: WindowMaker dockapp to monitor memory and swap usage
+# URL:         https://www.dockapps.net/wmmemload
+# Depends on:  libdockapp
+
+name=wmnetload
+version=1.3
+release=1
+source="https://github.com/bbidulock/$name/releases/download/$version/$name-$version.tar.gz
+	wmnetload-1.3-tn1.patch
+	wmnetload-1.3-tn2.patch
+	wmnetload-alt-autotools-warnings_fix.patch
+	wmnetload-alt-configure-rpath_fix.patch
+	wmnetload-alt-warnings-fix.patch
+	$name.1"
+
+build() {
+	patch -d $name-$version -p1 -i $SRC/wmnetload-1.3-tn1.patch
+	patch -d $name-$version -p1 -i $SRC/wmnetload-1.3-tn2.patch
+	patch -d $name-$version -p2 -i $SRC/wmnetload-alt-autotools-warnings_fix.patch
+	patch -d $name-$version -p2 -i $SRC/wmnetload-alt-configure-rpath_fix.patch
+	patch -d $name-$version -p1 -i $SRC/wmnetload-alt-warnings-fix.patch
+
+	mkdir build; cd build
+
+	autoreconf -fiv ../$name-$version
+	../$name-$version/configure --prefix=/usr
+
+	make V=1
+	make DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/man/man1 $SRC/$name.1
+}

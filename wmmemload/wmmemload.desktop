@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmmemload
+Comment=Dockapp that displays memory and swap usage
+Exec=wmmemload
+Categories=System;Monitor
+Keywords=memory;swap;dockapp;windowmaker

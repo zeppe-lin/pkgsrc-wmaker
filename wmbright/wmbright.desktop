@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmbright
+Comment=Dockapp that provides monitor brightness control
+Exec=wmbright
+Categories=System
+Keywords=monitor;bright;dockapp;windowmaker

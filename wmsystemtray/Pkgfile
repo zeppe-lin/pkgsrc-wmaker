@@ -1,0 +1,23 @@
+# Description: Dockapp that provides Freedesktop.org system tray
+# URL:         http://wmsystemtray.sourceforge.net/
+# Depends on:  xorg-font-misc-misc xorg-libxfixes xorg-libxmu xorg-libxpm
+
+name=wmsystemtray
+version=1.4
+release=1
+source="http://downloads.sourceforge.net/$name/$name-$version.tar.gz
+	fix-manpage.patch
+	$name.desktop"
+
+build() {
+	patch -d $name-$version -Np1 -i $SRC/fix-manpage.patch
+
+	mkdir build; cd build
+
+	../$name-$version/configure --prefix=/usr
+
+	make V=1
+	make DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/applications $SRC/$name.desktop
+}

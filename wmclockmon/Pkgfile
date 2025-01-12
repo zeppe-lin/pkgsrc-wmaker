@@ -1,0 +1,21 @@
+# Description: Dockapp that displays a clock in 12/24h mode with alarm mode
+# URL:         https://www.dockapps.net/wmclockmon
+# Depends on:  gtk3 xorg-libxpm
+
+name=wmclockmon
+version=1.0.0
+release=1
+source="https://www.dockapps.net/download/$name-$version.tar.xz
+	2c62c79e614e7872a76038ac1d0620fbb5c9b95c.patch"
+
+build() {
+	patch -d $name-$version -Np1 -i $SRC/2c62c79e614e7872a76038ac1d0620fbb5c9b95c.patch
+
+	mkdir build; cd build
+
+	autoreconf -fi ../$name-$version
+	../$name-$version/configure --prefix=/usr
+
+	make V=1
+	make DESTDIR=$PKG install
+}

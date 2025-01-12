@@ -1,0 +1,31 @@
+# Description: Sun Microsystems theme for WindowMaker
+# URL:         https://www.gozer.org/window_maker/themes/
+# Depends on:  wmaker
+
+name=wmaker-sun-theme
+version=19980809
+release=1
+source="$name-$version.tar.gz::https://www.gozer.org/window_maker/themes/themes/Sun/Sun.tar.gz
+	fonts.patch"
+
+build() {
+	patch -Np1 -i $SRC/fonts.patch
+
+	mkdir -p $PKG/usr/share/WindowMaker/Themes/"Sun Microsystems"
+	cd $PKG/usr/share/WindowMaker/Themes/"Sun Microsystems"
+
+	mkdir -p Default.themed
+	install -m 0644 $SRC/Pixmaps/*.xpm Default.themed/
+	install -m 0644 $SRC/Themes/Sun Default.themed/style
+
+	mkdir -p Full.themed
+	for f in background menuback tile titlebar titlebar-dark; do
+		ln -s ../Default.themed/Sun_${f}.xpm Full.themed/Sun_${f}.xpm
+	done
+	sed '/IconBack = /s/dgradient, grey80/tpixmap, Sun_tile.xpm/' \
+		Default.themed/style > Full.themed/style
+
+	#sed -i '/ClipTitleColor = /s/white/"#433F5B"/' Default.themed/style
+	sed -i '/ClipTitleColor = /s/white/"#333340"/' Default.themed/style
+	sed -i '/CClipTitleColor = /s/grey60/grey40/' Default.themed/style
+}

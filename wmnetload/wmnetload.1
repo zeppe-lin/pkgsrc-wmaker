@@ -1,0 +1,71 @@
+.\" wmnetload(1) manual page
+.TH WMNETLOAD 1 "31 Dec 2010" "Version 1.3" "WMNETLOAD MANUAL PAGE"
+.SH NAME
+\fBwmnetload\fR \- a network interface monitor dockapp
+.SH SYNOPSIS
+.B wmnetload
+[\fIOPTION\fR]...
+.SH DESCRIPTION
+.B wmnetload
+is a network interface monitor dockapp for Window Maker. It is designed to
+work well with other dockapps such as wmcpuload and wmmemmon. It features
+the auto-scaling graph for recent network activities, and the utility to
+seperate the upstream and the downstream traffic load without consorting to
+colors. It also shows statistic of the throughput and alerts whether the
+interface is dropped or being going down.
+.LP
+.SH OPTIONS
+.TP
+\fB-b\fR, \fB\-\-bytes\fR
+Use bytes instead of bits per second to display throughput statistics (the
+default is bits per second).
+.TP
+\fB-bl\fR, \fB\-\-backlight\fR
+Enable backlight.
+.TP
+\fB-d\fR, \fB\-\-display\fR \fIstring
+Set display to use.
+.TP
+\fB-h\fR, \fB\-\-help\fR
+Print the command line options and exit.
+.TP
+\fB-i\fR, \fB\-\-interface\fR \fIname
+Set network interface to monitor.
+.TP
+\fB-lc\fR, \fB\-\-lightcolor\fR \fIvalue
+Set backlight color to use (default is #6EC63B).
+.TP
+\fB-d\fR, \fB\-\-display\fR \fIstring
+Set display to use.
+.TP
+\fB-n\fR, \fB\-\-no-ifname\fR
+\fBDO NOT\fR display the name of the interface which \fBwmnetload\fR is
+monitoring.
+.TP
+\fB-s\fR, \fB\-\-smooth\fR \fIvalue
+Set smoothing value (experimental).
+.TP
+\fB-u\fR, \fB\-\-update\fR \fItime
+Set update interval in seconds (default is 1).
+.TP
+\fB-v\fR, \fB\-\-version\fR
+Prints the version of \fBwmnetload\fR and exit.
+.TP
+\fB-w\fR, \fB\-\-windowed\fR
+Run \fBwmnetload\fR in windowed mode, with a digital style of display.
+.SH HOMEPAGE
+http://freshmeat.net/projects/wmnetload.
+.SH BUGS
+If you find a bug, please report it to <meem@gnu.org>.
+.SH AUTHORS
+\fBwmnetload\fR was written by Peter Memishian <meem@gnu.org>.
+.LP
+This manual page was written by Nguyen Vinh for Debian GNU/Linux System (but
+may be used for others). Permission is granted to copy, distribute and/or
+modify this document under the terms of the GNU General Public License
+Version 2, and any later versions published by Free Software Foundation.
+There is no WARRANTY, to the extent permitted by the law.
+.TP
+Copyright (c) 2002 Peter Memishian <meem@gnu.org>.
+.SH SEE ALSO
+For more detailed information about \fBwmnetload\fR, please read README.

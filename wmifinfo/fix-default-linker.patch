@@ -1,0 +1,19 @@
+Description: wmifinfo fails to cross build from source, because its Makefile
+ uses two variables (CC and LD) to supply the compiler, but dh_auto_build only
+ passes the former.
+Author: Helmut Grohne <helmut@subdivi.de>
+Bug-Debian: https://bugs.debian.org/929758
+Forwarded: https://groups.google.com/g/wmaker-dev/c/yCXIHY3Fy74/m/n2bOlosxBAAJ
+Last-updated: 2021-10-09
+
+--- a/Makefile
++++ b/Makefile
+@@ -12,7 +12,7 @@
+ VERSION=0.11
+ 
+ CC = gcc
+-LD = gcc
++LD = $(CC)
+ INSTALL = install
+ CFLAGS = -Wall -O2
+ COPTS = -D'VERSION="$(VERSION)"' -D'NAME="$(NAME)"'

@@ -1,0 +1,174 @@
+diff -ru wmnetload-1.3.orig/src/ifstat.h wmnetload-1.3/src/ifstat.h
+--- wmnetload-1.3.orig/src/ifstat.h	2002-01-09 12:23:25 +0600
++++ wmnetload-1.3/src/ifstat.h	2005-12-09 21:49:42 +0600
+@@ -25,8 +25,6 @@
+ #ifndef	WN_IFSTAT_H
+ #define	WN_IFSTAT_H
+ 
+-#pragma ident "@(#)ifstat.h	1.1	02/01/09 meem"
+-
+ /*
+  * For now, we only keep two network statistics -- maybe we'll keep more in
+  * the future.
+diff -ru wmnetload-1.3.orig/src/ifstat_linux.c wmnetload-1.3/src/ifstat_linux.c
+--- wmnetload-1.3.orig/src/ifstat_linux.c	2003-02-17 09:45:03 +0600
++++ wmnetload-1.3/src/ifstat_linux.c	2005-12-09 22:13:34 +0600
+@@ -21,8 +21,6 @@
+  * Linux-specific interface statistics gathering routines.
+  */
+ 
+-#pragma ident "@(#)ifstat_linux.c	1.3	02/10/27 meem"
+-
+ #include <config.h>
+ #include <sys/types.h>
+ #include <stdlib.h>
+diff -ru wmnetload-1.3.orig/src/utils.c wmnetload-1.3/src/utils.c
+--- wmnetload-1.3.orig/src/utils.c	2002-10-27 10:54:26 +0600
++++ wmnetload-1.3/src/utils.c	2005-12-10 14:22:38 +0600
+@@ -21,8 +21,6 @@
+  * Generic utility functions.
+  */
+ 
+-#pragma ident "@(#)utils.c	1.4	02/10/27 meem"
+-
+ #include <config.h>
+ #include <sys/types.h>
+ #include <errno.h>
+@@ -83,8 +81,8 @@
+ 	static gid_t	saved_egid;
+ 	static uid_t	saved_euid;
+ 	static int	is_initialized;
+-	gid_t		new_egid;
+-	uid_t		new_euid;
++	gid_t		new_egid = -1;
++	uid_t		new_euid = -1;
+ 
+ 	if (is_initialized == 0) {
+ 		saved_euid = geteuid();
+@@ -108,12 +106,12 @@
+ 	}
+ 
+ 	if (geteuid() != new_euid) {
+-		if (seteuid(new_euid))
++		if (seteuid(new_euid) == -1)
+ 			die("cannot set effective uid to %d", new_euid);
+ 	}
+ 
+ 	if (getegid() != new_egid) {
+-		if (setegid(new_egid))
++		if (setegid(new_egid) == -1)
+ 			die("cannot set effective gid to %d", new_egid);
+ 	}
+ }
+diff -ru wmnetload-1.3.orig/src/utils.h wmnetload-1.3/src/utils.h
+--- wmnetload-1.3.orig/src/utils.h	2002-01-22 11:46:51 +0600
++++ wmnetload-1.3/src/utils.h	2005-12-09 21:50:20 +0600
+@@ -24,8 +24,6 @@
+ #ifndef	WN_UTILS_H
+ #define	WN_UTILS_H
+ 
+-#pragma ident "@(#)utils.h	1.2	02/01/22 meem"
+-
+ #include <stdarg.h>
+ 
+ extern const char	*progname;
+diff -ru wmnetload-1.3.orig/src/wmnetload.c wmnetload-1.3/src/wmnetload.c
+--- wmnetload-1.3.orig/src/wmnetload.c	2003-02-23 15:07:17 +0600
++++ wmnetload-1.3/src/wmnetload.c	2005-12-13 23:00:24 +0600
+@@ -19,8 +19,6 @@
+  *	       Inspired by Seiichi SATO's nifty CPU usage monitor.
+  */
+ 
+-#pragma ident "@(#)wmnetload.c	1.15	03/02/23 meem"
+-
+ #include <config.h>
+ #include <sys/types.h>
+ #include <sys/socket.h>
+@@ -881,16 +879,16 @@
+ if_next(int fd, const char *ifname, char *nextifname)
+ {
+ 	struct ifconf	ifc;
+-	struct ifreq	*ifrp, *matchifrp = NULL, *loifrp;
++	struct ifreq	*ifrp, *matchifrp = NULL, *loifrp = NULL;
+ 	void		*startp, *endp;
+ 	int		flags;
+-	int		ifcount;
+ 	int		prevlen;
+ 
+ 	/*
+ 	 * Fetch the number of interfaces on the system.
+ 	 */
+ #ifdef	SIOCGIFNUM
++	int		ifcount;
+ 	if (ioctl(fd, SIOCGIFNUM, &ifcount) == -1)
+ 		return (0);
+ 	ifc.ifc_len = ifcount * sizeof (struct ifreq);
+@@ -1019,7 +1017,7 @@
+ 		{ font_xpm,		&font 		},
+ 		{ NULL }
+ 	};
+-	unsigned int h, w, i;
++	unsigned int i;
+ 	XpmColorSymbol colors[] = { {"Back0", NULL, 0}, {"Back1", NULL, 0} };
+ 	XpmAttributes xpmAttr;
+ 
+@@ -1051,7 +1049,7 @@
+ setshape(void)
+ {
+ 	Pixmap mask, pixmap;
+-	unsigned int h, w;
++	unsigned short int h, w;
+ 
+ 	if (DAMakePixmapFromData(backlight_off_xpm, &pixmap, &mask, &h, &w)) {
+ 		DASetShape(mask);
+@@ -1118,7 +1116,7 @@
+ {
+ 	XColor *colorcells;
+ 	XColor approxcolor;
+-	int i, besti;
++	int i, besti = 0;
+ 	unsigned long bestapprox = ULONG_MAX;
+ 	unsigned long approx, diffr, diffg, diffb;
+ 	unsigned int ncell;
+@@ -1139,7 +1137,7 @@
+ 	for (i = 0; i < ncell; i++) {
+ 		diffr = (red - colorcells[i].red) >> 8;
+ 		diffg = (green - colorcells[i].green) >> 8;
+-		diffr = (blue - colorcells[i].blue) >> 8;
++		diffb = (blue - colorcells[i].blue) >> 8;
+ 
+ 		approx = diffr * diffr + diffg * diffg + diffb * diffb;
+ 		if (approx < bestapprox) {
+@@ -1157,7 +1155,7 @@
+ 	approxcolor.red = colorcells[besti].red;
+ 	approxcolor.blue = colorcells[besti].blue;
+ 	approxcolor.green = colorcells[besti].green;
+-	colorcells[besti].flags = DoRed | DoGreen | DoBlue;
++	approxcolor.flags = DoRed | DoGreen | DoBlue;
+ 
+ 	free(colorcells);
+ 
+diff -ru wmnetload-1.3.orig/xpm/common/pixmaps.h wmnetload-1.3/xpm/common/pixmaps.h
+--- wmnetload-1.3.orig/xpm/common/pixmaps.h	2002-10-27 11:08:48 +0600
++++ wmnetload-1.3/xpm/common/pixmaps.h	2005-12-09 22:11:14 +0600
+@@ -21,8 +21,6 @@
+  * Pixmaps and sizing information that's common across looks.
+  */
+ 
+-#pragma ident "@(#)pixmaps.h	1.2	02/10/27 meem"
+-
+ #ifndef	WN_COMMON_PIXMAPS_H
+ #define	WN_COMMON_PIXMAPS_H
+ 
+diff -ru wmnetload-1.3.orig/xpm/current/pixmaps.h wmnetload-1.3/xpm/current/pixmaps.h
+--- wmnetload-1.3.orig/xpm/current/pixmaps.h	2002-10-27 11:11:49 +0600
++++ wmnetload-1.3/xpm/current/pixmaps.h	2005-12-09 21:50:47 +0600
+@@ -21,8 +21,6 @@
+  * Pixmaps and sizing information for the "current" wmnetload look.
+  */
+ 
+-#pragma ident "@(#)pixmaps.h	1.2	02/10/27 meem"
+-
+ #ifndef	WN_CURRENT_PIXMAPS_H
+ #define	WN_CURRENT_PIXMAPS_H
+ 

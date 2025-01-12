@@ -1,0 +1,14 @@
+--- a/wmcalc.desktop	2024-04-16 22:34:57.000000000 +0300
++++ b/wmcalc.desktop	2024-10-13 08:52:34.674258834 +0300
+@@ -2,8 +2,8 @@
+ Version=1.0
+ Type=Application
+ Name=wmcalc
+-Comment=Calculator dockapp for Window Maker
++Comment=Dockapp calculator
+ Exec=wmcalc
+-Categories=Science;Math
+-Keywords=calculator;dockapp;window maker
++Categories=Science;Math;Utility
++Keywords=calculator;dockapp;windowmaker
+ Icon=wmcalc

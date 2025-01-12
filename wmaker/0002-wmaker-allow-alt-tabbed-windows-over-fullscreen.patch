@@ -1,0 +1,55 @@
+From 5561199c871293cca0b3dc2c6feff0d7783111c6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>
+Date: Tue, 12 Jul 2016 23:49:47 +0200
+Subject: [PATCH 2/2] wmaker: allow alt+tabbed windows over fullscreen
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fullscreen windows should only be on top when they are in focus. Change
+the stacking level temporarily back to WMNormalLevel if the fullscreen
+window loses focus due to an alt+tab operation.
+
+Change the stacking level back to WMFullscreenLevel if the fullscreen
+window receives the focus again.
+
+Cc: Amadeusz Sławiński <amade@asmblr.net>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+---
+ src/actions.c | 4 ++++
+ src/cycling.c | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/src/actions.c b/src/actions.c
+index e6a91d5..4bc3e07 100644
+--- a/src/actions.c
++++ b/src/actions.c
+@@ -216,6 +216,10 @@ void wSetFocusTo(WScreen *scr, WWindow *wwin)
+ 			if (wPreferences.highlight_active_app)
+ 				wApplicationDeactivate(oapp);
+ 		}
++
++		/* reset fullscreen if temporarily removed due to lost focus*/
++		if (wwin->flags.fullscreen)
++			ChangeStackingLevel(wwin->frame->core, WMFullscreenLevel);
+ 	}
+ 
+ 	wWindowFocus(wwin, focused);
+diff --git a/src/cycling.c b/src/cycling.c
+index 916d947..94b9183 100644
+--- a/src/cycling.c
++++ b/src/cycling.c
+@@ -62,6 +62,10 @@ static WWindow *change_focus_and_raise(WWindow *newFocused, WWindow *oldFocused,
+ 	if (!newFocused)
+ 		return oldFocused;
+ 
++	/* allow the focused window to float on top of a fullscreen window */
++	if (oldFocused->flags.fullscreen)
++		ChangeStackingLevel(oldFocused->frame->core, WMNormalLevel);
++
+ 	wWindowFocus(newFocused, oldFocused);
+ 	oldFocused = newFocused;
+ 
+-- 
+2.10.2
+

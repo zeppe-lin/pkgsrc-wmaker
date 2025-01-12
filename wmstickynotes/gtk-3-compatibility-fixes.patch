@@ -1,0 +1,295 @@
+Description: minimal changes to make wmstickynotes GTK-3 compatible
+ 1. Update `PKG_CHECK_MODULES`.
+ 2. Replace `GdkPixmap` with `GdkPixbuf`.
+ 3. Replace direct member accesses with getter calls.
+ 4. Replace `GdkColor` with `GdkRGBA`.
+Author: Jeremy Sowden <azazel@debian.org>
+Last-Update: 2024-03-24
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=967813
+
+--- a/configure.ac
++++ b/configure.ac
+@@ -18,8 +18,7 @@
+ AC_HEADER_DIRENT
+ AC_HEADER_STDC
+ 
+-AM_PATH_GTK_2_0([2.4.0])
+-PKG_CHECK_MODULES(GTK, gdk-2.0 gtk+-2.0,,exit)
++PKG_CHECK_MODULES(GTK, gdk-3.0 gtk+-3.0,,exit)
+ AC_SUBST(GTK_LIBS)
+ AC_SUBST(GTK_CFLAGS)
+ 
+--- a/delete_button.xpm
++++ b/delete_button.xpm
+@@ -1,5 +1,5 @@
+ /* XPM */
+-static char * delete_button_xpm[] = {
++static const char * delete_button_xpm[] = {
+ "8 8 4 1",
+ " 	c #000000",
+ ".	c #939393",
+--- a/resize_button.xpm
++++ b/resize_button.xpm
+@@ -1,5 +1,5 @@
+ /* XPM */
+-static char * resize_button_xpm[] = {
++static const char * resize_button_xpm[] = {
+ "8 8 2 1",
+ " 	c None",
+ ".	c #000000",
+--- a/wmstickynotes.c
++++ b/wmstickynotes.c
+@@ -28,8 +28,6 @@
+ #include <X11/extensions/shape.h>
+ #include <X11/Xatom.h>
+ 
+-GdkColormap *colormap;
+-
+ /* The highest note id used so far (this is used when making a new note so
+  * that no ids are clobbered) */
+ long int highest_note_id = 0;
+@@ -57,11 +55,10 @@
+ {
+ 	GtkWidget *window;
+ 	GtkWidget *box;
+-	GdkColor color;
++	GdkRGBA color;
+ 	XWMHints mywmhints;
+ 	GtkWidget *main_button;
+-	GdkPixmap *main_button_pixmap;
+-	GdkBitmap *main_button_mask;
++	GdkPixbuf *main_button_pixbuf;
+ 	GtkWidget *main_button_box;
+ 	GtkWidget *color_menu;
+ 	GtkWidget *item;
+@@ -70,7 +67,7 @@
+ 	GtkWidget *color_box2;
+ 	GtkWidget *color_box3;
+ 	GtkWidget *hbox;
+-	GdkColor gcolor;
++	GdkRGBA gcolor;
+ 	char *wmstickynotes_dir = NULL;
+ 	gboolean use_default_dir = TRUE;
+ 	int option_index = 0;
+@@ -142,19 +139,17 @@
+ 
+ 	gtk_init(&argc, &argv);
+ 
+-	colormap = gdk_colormap_new(gdk_visual_get_system(), TRUE);
+-
+ 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+ 	gtk_window_set_default_size(GTK_WINDOW(window), 48, 48);
+ 
+ 	box = gtk_event_box_new();
+ 	gtk_container_add(GTK_CONTAINER (window), box);
+ 
+-	gdk_color_parse ("#fafafa", &color);
+-	gtk_widget_modify_bg(box, GTK_STATE_NORMAL, &color);
++	gdk_rgba_parse(&color, "#fafafa");
++	gtk_widget_override_background_color(box, GTK_STATE_NORMAL, &color);
+ 
+-	main_button_pixmap = gdk_pixmap_colormap_create_from_xpm_d(NULL, colormap, &main_button_mask, NULL, wmstickynotes_xpm);
+-	main_button = gtk_image_new_from_pixmap(main_button_pixmap, main_button_mask);
++	main_button_pixbuf = gdk_pixbuf_new_from_xpm_data(wmstickynotes_xpm);
++	main_button = gtk_image_new_from_pixbuf(main_button_pixbuf);
+ 	main_button_box = gtk_event_box_new();
+ 	gtk_container_add(GTK_CONTAINER(main_button_box), main_button);
+ 	gtk_container_add(GTK_CONTAINER(box), main_button_box);
+@@ -167,25 +162,25 @@
+ 		//color box1
+ 		color_box1 = gtk_event_box_new();
+ 		gtk_widget_set_size_request(color_box1, 15, -1);
+-		gdk_color_parse(color_schemes[i].top, &gcolor);
+-		gtk_widget_modify_bg(color_box1, GTK_STATE_NORMAL, &gcolor);
+-		gtk_widget_modify_bg(color_box1, GTK_STATE_PRELIGHT, &gcolor);
++		gdk_rgba_parse(&gcolor, color_schemes[i].top);
++		gtk_widget_override_background_color(color_box1, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_override_background_color(color_box1, GTK_STATE_PRELIGHT, &gcolor);
+ 		//
+ 
+ 		//color box2
+ 		color_box2 = gtk_event_box_new();
+ 		gtk_widget_set_size_request(color_box2, 15, -1);
+-		gdk_color_parse(color_schemes[i].background, &gcolor);
+-		gtk_widget_modify_bg(color_box2, GTK_STATE_NORMAL, &gcolor);
+-		gtk_widget_modify_bg(color_box2, GTK_STATE_PRELIGHT, &gcolor);
++		gdk_rgba_parse(&gcolor, color_schemes[i].background);
++		gtk_widget_override_background_color(color_box2, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_override_background_color(color_box2, GTK_STATE_PRELIGHT, &gcolor);
+ 		//
+ 
+ 		//color box3
+ 		color_box3 = gtk_event_box_new();
+ 		gtk_widget_set_size_request(color_box3, 15, -1);
+-		gdk_color_parse(color_schemes[i].text, &gcolor);
+-		gtk_widget_modify_bg(color_box3, GTK_STATE_NORMAL, &gcolor);
+-		gtk_widget_modify_bg(color_box3, GTK_STATE_PRELIGHT, &gcolor);
++		gdk_rgba_parse(&gcolor, color_schemes[i].text);
++		gtk_widget_override_background_color(color_box3, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_override_background_color(color_box3, GTK_STATE_PRELIGHT, &gcolor);
+ 		//
+ 
+ 		hbox = gtk_hbox_new(FALSE, 4);
+@@ -202,14 +197,15 @@
+ 	gtk_widget_show_all(GTK_WIDGET(color_menu));
+ 	gtk_widget_show_all(window);
+ 
+-	mywmhints.icon_window = GDK_WINDOW_XID(window->window);
+-	mywmhints.window_group = GDK_WINDOW_XID(window->window);
++	mywmhints.icon_window = GDK_WINDOW_XID(gtk_widget_get_window(window));
++	mywmhints.window_group = GDK_WINDOW_XID(gtk_widget_get_window(window));
+ 	mywmhints.icon_x = 0;
+ 	mywmhints.icon_y = 0;
+ 	mywmhints.flags = IconWindowHint | StateHint;
+ 	mywmhints.initial_state = WithdrawnState;
+ 
+-	XSetWMHints(GDK_WINDOW_XDISPLAY(window->window), GDK_WINDOW_XID(window->window), &mywmhints);
++	XSetWMHints(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(window)),
++		    GDK_WINDOW_XID(gtk_widget_get_window(window)), &mywmhints);
+ 
+ 	g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+ 	g_signal_connect(G_OBJECT(main_button_box), "button-press-event", G_CALLBACK(main_button_pressed), color_menu);
+@@ -340,7 +336,8 @@
+ 	note->y = event->y;
+ 	note->width = event->width;
+ 	note->height = event->height;
+-	note->workspace = get_workspace(GDK_WINDOW_XDISPLAY(window->window), GDK_WINDOW_XID(window->window));
++	note->workspace = get_workspace(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(window)),
++					GDK_WINDOW_XID(gtk_widget_get_window(window)));
+ 	save_note(window, note);
+ 	return FALSE;
+ }
+@@ -381,11 +378,9 @@
+ 	GtkWidget *bottom_hbox;
+ 	GtkWidget *top_bar;
+ 	GtkWidget *delete_button;
+-	GdkPixmap *delete_button_pixmap;
+-	GdkBitmap *delete_button_mask;
++	GdkPixbuf *delete_button_pixbuf;
+ 	GtkWidget *resize_button;
+-	GdkPixmap *resize_button_pixmap;
+-	GdkBitmap *resize_button_mask;
++	GdkPixbuf *resize_button_pixbuf;
+ 	GtkTextBuffer *text_buffer;
+ 
+ 	Note *note;
+@@ -423,13 +418,13 @@
+ 	bottom_bar = gtk_label_new("");
+ 	gtk_widget_set_size_request(bottom_bar, -1, 8);
+ 
+-	delete_button_pixmap = gdk_pixmap_colormap_create_from_xpm_d(NULL, colormap, &delete_button_mask, NULL, delete_button_xpm);
+-	delete_button = gtk_image_new_from_pixmap(delete_button_pixmap, delete_button_mask);
++	delete_button_pixbuf = gdk_pixbuf_new_from_xpm_data(delete_button_xpm);
++	delete_button = gtk_image_new_from_pixbuf(delete_button_pixbuf);
+ 	note->delete_button_box = gtk_event_box_new();
+ 	gtk_widget_set_size_request(note->delete_button_box, 10, 10);
+ 
+-	resize_button_pixmap = gdk_pixmap_colormap_create_from_xpm_d(NULL, colormap, &resize_button_mask, NULL, resize_button_xpm);
+-	resize_button = gtk_image_new_from_pixmap(resize_button_pixmap, resize_button_mask);
++	resize_button_pixbuf = gdk_pixbuf_new_from_xpm_data(resize_button_xpm);
++	resize_button = gtk_image_new_from_pixbuf(resize_button_pixbuf);
+ 	note->resize_button_box = gtk_event_box_new();
+ 
+ 	set_note_color(note, note->scheme);
+@@ -450,13 +445,15 @@
+ 	gtk_widget_show_all(window);
+ 
+ 	if(old_note) {
+-		set_workspace(GDK_WINDOW_XDISPLAY(window->window), GDK_WINDOW_XID(window->window), old_note->workspace);
++		set_workspace(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(window)),
++			      GDK_WINDOW_XID(gtk_widget_get_window(window)), old_note->workspace);
+ 		gtk_window_resize(GTK_WINDOW(window), old_note->width, old_note->height);
+ 		gtk_window_move(GTK_WINDOW(window), old_note->x, old_note->y);
+ 	} else {
+ 		gtk_window_get_position(GTK_WINDOW(window), &(note->x), &(note->y));
+ 		gtk_window_get_size(GTK_WINDOW(window), &(note->width), &(note->height));
+-		note->workspace = get_workspace(GDK_WINDOW_XDISPLAY(window->window), GDK_WINDOW_XID(window->window));
++		note->workspace = get_workspace(GDK_WINDOW_XDISPLAY(gtk_widget_get_window(window)),
++						GDK_WINDOW_XID(gtk_widget_get_window(window)));
+ 	}
+ 
+ 	g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(delete_note), note);
+@@ -547,7 +544,7 @@
+ 	GtkWidget *color_box2;
+ 	GtkWidget *color_box3;
+ 	GtkWidget *hbox;
+-	GdkColor gcolor;
++	GdkRGBA gcolor;
+ 	int i;
+ 
+ 	color_menu = gtk_menu_new();
+@@ -563,25 +560,25 @@
+ 		//color box1
+ 		color_box1 = gtk_event_box_new();
+ 		gtk_widget_set_size_request(color_box1, 15, -1);
+-		gdk_color_parse(color_schemes[i].top, &gcolor);
+-		gtk_widget_modify_bg(color_box1, GTK_STATE_NORMAL, &gcolor);
+-		gtk_widget_modify_bg(color_box1, GTK_STATE_PRELIGHT, &gcolor);
++		gdk_rgba_parse(&gcolor, color_schemes[i].top);
++		gtk_widget_override_background_color(color_box1, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_override_background_color(color_box1, GTK_STATE_PRELIGHT, &gcolor);
+ 		//
+ 
+ 		//color box2
+ 		color_box2 = gtk_event_box_new();
+ 		gtk_widget_set_size_request(color_box2, 15, -1);
+-		gdk_color_parse(color_schemes[i].background, &gcolor);
+-		gtk_widget_modify_bg(color_box2, GTK_STATE_NORMAL, &gcolor);
+-		gtk_widget_modify_bg(color_box2, GTK_STATE_PRELIGHT, &gcolor);
++		gdk_rgba_parse(&gcolor, color_schemes[i].background);
++		gtk_widget_override_background_color(color_box2, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_override_background_color(color_box2, GTK_STATE_PRELIGHT, &gcolor);
+ 		//
+ 
+ 		//color box3
+ 		color_box3 = gtk_event_box_new();
+ 		gtk_widget_set_size_request(color_box3, 15, -1);
+-		gdk_color_parse(color_schemes[i].text, &gcolor);
+-		gtk_widget_modify_bg(color_box3, GTK_STATE_NORMAL, &gcolor);
+-		gtk_widget_modify_bg(color_box3, GTK_STATE_PRELIGHT, &gcolor);
++		gdk_rgba_parse(&gcolor, color_schemes[i].text);
++		gtk_widget_override_background_color(color_box3, GTK_STATE_NORMAL, &gcolor);
++		gtk_widget_override_background_color(color_box3, GTK_STATE_PRELIGHT, &gcolor);
+ 		//
+ 
+ 		hbox = gtk_hbox_new(FALSE, 4);
+@@ -611,19 +608,19 @@
+ 
+ void set_note_color(Note *note, ColorScheme *scheme)
+ {
+-	GdkColor gcolor;
++	GdkRGBA gcolor;
+ 
+ 	note->scheme = scheme;
+ 
+-	gdk_color_parse(scheme->top, &gcolor);
+-	gtk_widget_modify_bg(note->top_bar_box, GTK_STATE_NORMAL, &gcolor);
+-	gtk_widget_modify_bg(note->delete_button_box, GTK_STATE_NORMAL, &gcolor);
+-
+-	gdk_color_parse(scheme->background, &gcolor);
+-	gtk_widget_modify_base(note->text_widget, GTK_STATE_NORMAL, &gcolor);
+-	gtk_widget_modify_bg(note->window, GTK_STATE_NORMAL, &gcolor);
+-	gtk_widget_modify_bg(note->resize_button_box, GTK_STATE_NORMAL, &gcolor);
++	gdk_rgba_parse(&gcolor, scheme->top);
++	gtk_widget_override_background_color(note->top_bar_box, GTK_STATE_NORMAL, &gcolor);
++	gtk_widget_override_background_color(note->delete_button_box, GTK_STATE_NORMAL, &gcolor);
++
++	gdk_rgba_parse(&gcolor, scheme->background);
++	gtk_widget_override_background_color(note->text_widget, GTK_STATE_NORMAL, &gcolor);
++	gtk_widget_override_background_color(note->window, GTK_STATE_NORMAL, &gcolor);
++	gtk_widget_override_background_color(note->resize_button_box, GTK_STATE_NORMAL, &gcolor);
+ 
+-	gdk_color_parse(scheme->text, &gcolor);
+-	gtk_widget_modify_text(note->text_widget,GTK_STATE_NORMAL, &gcolor);
++	gdk_rgba_parse(&gcolor, scheme->text);
++	gtk_widget_override_color(note->text_widget,GTK_STATE_NORMAL, &gcolor);
+ }
+--- a/wmstickynotes.xpm
++++ b/wmstickynotes.xpm
+@@ -1,5 +1,5 @@
+ /* XPM */
+-static char * wmstickynotes_xpm[] = {
++static const char * wmstickynotes_xpm[] = {
+ "48 48 33 1",
+ " 	c None",
+ ".	c #000000",

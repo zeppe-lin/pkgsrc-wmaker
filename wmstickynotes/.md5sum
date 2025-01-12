@@ -1,0 +1,5 @@
+c4d5f5618459b0eadccc6c1acccc41aa  add-colors.patch
+f2f8f2a359edf3e3c4a1b138c27019e9  asprintf-format-string-fixes.patch
+247119d346ebb6e124a0df143452c546  fix-missing-asprintf-declaration.patch
+3368d3837c1ff23faf0b38fddd73747f  gtk-3-compatibility-fixes.patch
+622ddfa80b2c0686b69575374936280e  wmstickynotes-0.7.tar.gz

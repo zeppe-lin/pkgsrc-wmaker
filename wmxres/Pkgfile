@@ -1,0 +1,21 @@
+# Description: Dockapp that changes X modes
+# URL:         https://www.dockapps.net/wmxres
+# Depends on:  libdockapp xorg-libxxf86vm
+
+name=wmxres
+version=1.4
+release=1
+source="https://www.dockapps.net/download/wmxres-$version.tar.gz
+	wmxres.desktop"
+
+build() {
+	mkdir build; cd build
+
+	../wmxres-$version/configure  \
+		--prefix=/usr         \
+
+	make V=1
+	make DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/applications $SRC/wmxres.desktop
+}

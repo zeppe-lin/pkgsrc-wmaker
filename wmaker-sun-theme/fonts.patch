@@ -1,0 +1,13 @@
+--- a/Themes/Sun	2024-05-13 05:02:59.000000000 +0300
++++ b/Themes/Sun	2024-08-25 00:19:23.564757887 +0300
+@@ -3,8 +3,8 @@
+   WindowTitleFont = "-*-helvetica-bold-r-normal-*-12-*-*-*-*-*-*-*";
+   MenuTitleFont = "-*-helvetica-bold-r-normal-*-12-*-*-*-*-*-*-*";
+   MenuTextFont = "-*-helvetica-medium-r-normal-*-12-*-*-*-*-*-*-*";
+-  IconTitleFont = "-*-helvetica-medium-r-normal-*-8-*-*-*-*-*-*-*";
+-  ClipTitleFont = "-*-helvetica-medium-r-normal-*-10-*-*-*-*-*-*-*";
++  IconTitleFont = "-*-helvetica-medium-r-normal-*-10-*-*-*-*-*-*-*";
++  ClipTitleFont = "-*-helvetica-bold-r-normal-*-10-*-*-*-*-*-*-*";
+   DisplayFont = "-*-helvetica-medium-r-normal-*-12-*-*-*-*-*-*-*";
+   HighlightColor = "#60607C";
+   HighlightTextColor = white;

@@ -1,0 +1,12 @@
+# Description: Themes meta package for wmaker
+# URL:         https://zeppe-lin.github.io/
+# Depends on:  wmaker-blueglass-theme wmaker-newearthtones-theme wmaker-pinewm-theme wmaker-rustwitches-theme wmaker-sun-theme
+
+name=wmaker-themes
+version=0.1
+release=1
+source=
+
+build() {
+	mkdir -p $PKG/usr
+}

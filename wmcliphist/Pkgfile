@@ -1,0 +1,19 @@
+# Description: Dockapp that provides a clipboard history
+# URL:         https://www.dockapps.net/wmcliphist
+# Depends on:  gtk3
+
+name=wmcliphist
+version=2.1
+release=1
+source="https://www.dockapps.net/download/$name-$version.tar.gz
+	ff8522806d5cf9d523c458fa52e316b57ed3fab9.patch
+	$name.desktop"
+
+build() {
+	patch -d dockapps -Np1 -i $SRC/ff8522806d5cf9d523c458fa52e316b57ed3fab9.patch
+
+	make -C dockapps PREFIX=/usr
+	make -C dockapps PREFIX=/usr DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/applications $name.desktop
+}

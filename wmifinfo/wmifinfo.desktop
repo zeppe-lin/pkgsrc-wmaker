@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmifinfo
+Comment=Dockapp that displays information for all network interfaces
+Exec=wmifinfo
+Categories=System;Network
+Keywords=network;interface;dockapp;windowmaker

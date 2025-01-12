@@ -1,0 +1,89 @@
+diff '--color=auto' -pruN wmdiskmon-0.0.2.orig/doc/wmdiskmon.1 wmdiskmon-0.0.2/doc/wmdiskmon.1
+--- wmdiskmon-0.0.2.orig/doc/wmdiskmon.1	2024-12-31 16:22:13.598239256 +0200
++++ wmdiskmon-0.0.2/doc/wmdiskmon.1	2024-12-31 16:29:35.708444521 +0200
+@@ -16,7 +16,7 @@
+ .\" .sp <n>    insert n+1 empty lines
+ .\" for manpage-specific macros, see man(7)
+ .SH NAME
+-wmdiskmon \- A dockapp to monitor disks usage.
++wmdiskmon \- dockapp that displays disks usage
+ 
+ 
+ .SH SYNOPSIS
+@@ -24,20 +24,13 @@ wmdiskmon \- A dockapp to monitor disks
+ 
+ 
+ .SH DESCRIPTION
+-This manual page documents briefly the
+-.B wmdiskmon
+-command.
+-.PP
+ .\" TeX users may be more comfortable with the \fB<whatever>\fP and
+ .\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
+ .\" respectively.
+-\fBWMDiskMon\fP is a program to monitor disks usage. It is a dockapp that is
+-supported by X window managers such as Window Maker, AfterStep, BlackBox, and
+-Enlightenment.
+-
+-The dockapp has two modes. The default displays three devices at a time in
+-a bargraph manner. The other displays only one device, but with numeric
+-percentage and a longer name over three lines.
++\fBwmdiskmon\fP is a dockapp that displays disks usage. It has two modes.
++The default displays three devices at a time in a bargraph manner.
++The other displays only one device, but with numeric percentage and a longer
++name over three lines.
+ 
+ In default mode, clicking on the arrows scrolls the devices list up and down.
+ In single mode, it cycles through the list. In both modes, clicking with left
+@@ -54,39 +47,39 @@ starting with two dashes (`\-'). A summa
+ Attempt to open a window on the named X display. In the absence of  this option,
+ the  display  specified  by the
+ .B DISPLAY
+-environment variable is used.
++Environment variable is used.
+ .TP
+ .B \-bl, \-\-backlight
+-turn on back-light.
++Turn on back-light.
+ .TP
+ .B \-lc, \-\-light\-color <color>
+-back-light color. (rgb:6E/C6/3B is default)
++Back-light color (rgb:6E/C6/3B is default).
+ .TP
+ .B \-i,  \-\-interval <number>
+-number of secs between updates. (1 is default)
++Number of secs between updates (1 is default).
+ .TP
+ .B \-h,  \-\-help
+-show help text and exit.
++Show help text and exit.
+ .TP
+ .B \-v,  \-\-version
+-show program version and exit.
++Show program version and exit.
+ .TP
+ .B \-w,  \-\-windowed
+-run the application in windowed mode
++Run the application in windowed mode.
+ .TP
+ .B \-bw, \-\-broken\-wm
+-activate broken window manager fix
++Activate broken window manager fix.
+ .TP
+ .B \-p,  \-\-partition <device>
+-monitor the <device> partition (may be used more than once), a NFS device
++Monitor the <device> partition (may be used more than once), a NFS device
+ can also be specified (in fact all that is in the 1rst column of df -P,
+-the POSIX df behavior)
++the POSIX df behavior).
+ .TP
+ .B \-n,  \-\-device
+-show device instead of mount point
++Show device instead of mount point.
+ .TP
+ .B \-s,  \-\-single
+-show only one device at a time (default behavior is to display 3)
++Show only one device at a time (default behavior is to display 3).
+ 
+ 
+ .SH BUGS

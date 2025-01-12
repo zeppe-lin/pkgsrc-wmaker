@@ -1,0 +1,131 @@
+diff '--color=auto' -pruN dockapps/ChangeLog /mnt/upstream/windowmaker/dockapps/wmmemload/ChangeLog
+--- dockapps/ChangeLog	2015-04-07 16:19:45.000000000 +0300
++++ /mnt/upstream/windowmaker/dockapps/wmmemload/ChangeLog	2024-04-20 06:22:24.675907777 +0300
+@@ -21,7 +21,7 @@
+ 
+ 2014 October 4
+   * Now maintained by Window Maker Developers Team
+-	<wmaker-dev@lists.windowmaker.org>
++	<wmaker-dev@googlegroups.com>
+   * Fix autotools warnings.
+   * Fix errors in the manpage.
+   * Fix version check for kernel 3.0 (submitted by Guillermo Indalecio
+diff '--color=auto' -pruN dockapps/configure.ac /mnt/upstream/windowmaker/dockapps/wmmemload/configure.ac
+--- dockapps/configure.ac	2015-04-07 16:19:45.000000000 +0300
++++ /mnt/upstream/windowmaker/dockapps/wmmemload/configure.ac	2024-04-20 06:22:24.675907777 +0300
+@@ -2,7 +2,7 @@ dnl Process this file with autoconf to p
+ AC_PREREQ(2.52)
+ 
+ dnl AC_INIT(src/main.c)
+-AC_INIT(wmmemload, 0.1.8, wmaker-dev@lists.windowmaker.org)
++AC_INIT(wmmemload, 0.1.8, wmaker-dev@googlegroups.com)
+ AC_CANONICAL_HOST
+ AC_CANONICAL_TARGET
+ AM_INIT_AUTOMAKE
+diff '--color=auto' -pruN dockapps/README /mnt/upstream/windowmaker/dockapps/wmmemload/README
+--- dockapps/README	2015-04-07 16:19:45.000000000 +0300
++++ /mnt/upstream/windowmaker/dockapps/wmmemload/README	2024-04-20 06:22:24.675907777 +0300
+@@ -4,12 +4,12 @@ __    __ __  __  __  __  ____  __  __  _
+ 
+ ================================================================================
+ 
+-Homepage: http://windowmaker.org/dockapps/?name=wmmemload
++Homepage: https://www.dockapps.net/wmmemload
+ Git: http://repo.or.cz/dockapps.git
+ 
+ Original Author: Mark Staggs <me@markstaggs.net>
+ Currently maintained by: Window Maker Developers Team
+-                           <wmaker-dev@lists.windowmaker.org>
++                           <wmaker-dev@googlegroups.com>
+ 
+ ================================================================================
+ 
+diff '--color=auto' -pruN dockapps/src/main.c /mnt/upstream/windowmaker/dockapps/wmmemload/src/main.c
+--- dockapps/src/main.c	2015-04-07 16:19:45.000000000 +0300
++++ /mnt/upstream/windowmaker/dockapps/wmmemload/src/main.c	2024-04-20 06:22:24.675907777 +0300
+@@ -53,6 +53,7 @@ static int mem_usage;
+ static int swap_usage;
+ static unsigned alarm_mem = 101;
+ static unsigned alarm_swap = 101;
++time_t last_update = 0;
+ 
+ /* prototypes */
+ static void update(void);
+@@ -121,8 +122,12 @@ int main(int argc, char **argv)
+ 
+ 	/* Main loop */
+ 	while (1) {
+-		if (dockapp_nextevent_or_timeout(&event, update_interval * 1000)) {
+-			/* Next Event */
++		if (time(NULL) != last_update)
++			update();
++
++		while (XPending(display)) {
++			XNextEvent(display, &event);
++
+ 			switch (event.type) {
+ 			case ButtonPress:
+ 				switch_light();
+@@ -130,10 +135,8 @@ int main(int argc, char **argv)
+ 			default: /* make gcc happy */
+ 				break;
+ 			}
+-		} else {
+-			/* Time Out */
+-			update();
+ 		}
++		usleep(update_interval*1000000L);
+ 	}
+ 
+ 	return 0;
+@@ -180,6 +183,7 @@ static void update(void)
+ 
+ 	/* show */
+ 	dockapp_copy2window(pixmap);
++	time(&last_update);
+ }
+ 
+ /* called when mouse button pressed */
+diff '--color=auto' -pruN dockapps/src/mem_linux.c /mnt/upstream/windowmaker/dockapps/wmmemload/src/mem_linux.c
+--- dockapps/src/mem_linux.c	2015-04-07 16:19:45.000000000 +0300
++++ /mnt/upstream/windowmaker/dockapps/wmmemload/src/mem_linux.c	2024-04-20 06:22:24.675907777 +0300
+@@ -94,7 +94,7 @@ void mem_getusage(int *per_mem, int *per
+ {
+ 	char buffer[BUFSIZ], *p;
+ 	int fd, len, i;
+-	u_int64_t mtotal, mused, mfree, mbuffer, mcached;
++	u_int64_t mtotal, mused, mfree, mbuffer, mcached, mavail;
+ 	u_int64_t stotal, sused, sfree, scached = 0;
+ 
+ 	/* read /proc/meminfo */
+@@ -141,8 +141,8 @@ void mem_getusage(int *per_mem, int *per
+ 		p = skip_token(p);
+ 		/* examine each line of file */
+ 		mtotal  = strtoul(p, &p, 0); p = skip_multiple_token(p, 2);
+-		mfree   = strtoul(p, &p, 0);
+-		p = skip_multiple_token(p, 5); /* skip MemAvailable line */
++		mfree   = strtoul(p, &p, 0); p = skip_multiple_token(p, 2);
++		mavail  = strtoul(p, &p, 0); p = skip_multiple_token(p, 2);
+ 		mbuffer = strtoul(p, &p, 0); p = skip_multiple_token(p, 2);
+ 		mcached = strtoul(p, &p, 0); p = skip_multiple_token(p, 2);
+ 		scached = strtoul(p, &p, 0);
+@@ -162,6 +162,9 @@ void mem_getusage(int *per_mem, int *per
+ 	stotal = strtoul(p, &p, 0); p = skip_multiple_token(p, 2);
+ 	sfree  = strtoul(p, &p, 0);
+ 
++	if (format == AFTER_3_14) {
++		*per_mem = 100 * (double) (mtotal - mavail) / (double) mtotal;
++	} else {
+ 	/* calculate memory usage in percent */
+ 	mused = mtotal - mfree;
+ 	if (opts->ignore_buffers)
+@@ -169,6 +172,7 @@ void mem_getusage(int *per_mem, int *per
+ 	if (opts->ignore_cached)
+ 		mused -= mcached;
+ 	*per_mem = 100 * (double) mused / (double) mtotal;
++	}
+ 
+ 	/* calculate swap usage in percent */
+ 	sused = stotal - sfree;
+Binary files dockapps/src/.xvpics/backlight_off.xpm and /mnt/upstream/windowmaker/dockapps/wmmemload/src/.xvpics/backlight_off.xpm differ
+Binary files dockapps/src/.xvpics/backlight_on.xpm and /mnt/upstream/windowmaker/dockapps/wmmemload/src/.xvpics/backlight_on.xpm differ

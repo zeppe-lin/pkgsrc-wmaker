@@ -1,0 +1,33 @@
+# Description: Dockapp that monitors network interfaces
+# URL:         https://gitlab.com/wavexx/wmnd
+# Depends on:  xorg-libxpm
+
+name=wmnd
+version=0.4.18
+release=1
+source="https://www.thregr.org/~wavexx/software/wmnd/releases/wmnd-$version.tar.gz
+	01-Fix-missing-HOME-crash.patch
+	02-Make-counters-64-bit.patch
+	03-Fix-compiler-warnings.patch
+	04-Fix-strncpy-warning.patch
+	wmnd.desktop"
+
+build() {
+	# thanks to debian for these patches
+	for f in $SRC/*.patch; do
+		patch -d wmnd-$version -p1 -i $f
+	done
+
+	mkdir build; cd build
+
+	../wmnd-$version/configure  \
+		--prefix=/usr       \
+
+	make V=1
+	make DESTDIR=$PKG install
+
+	install -m 0644 -Dt $PKG/usr/share/applications $SRC/wmnd.desktop
+
+	# remove junk
+	rm -r $PKG/usr/share/doc
+}

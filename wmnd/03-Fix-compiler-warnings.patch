@@ -1,0 +1,108 @@
+From: Robert Luberda <robert@debian.org>
+Date: Fri, 31 Aug 2018 18:08:45 +0200
+Subject: Fix compiler warnings
+
+Fix warnings like the following:
+
+../../src/drivers.c:479:5: warning: ignoring return value of 'fgets', declared with attribute warn_unused_result [
+-Wunused-result]
+     fgets(temp, MAXBUF, fd);
+
+../../src/wmnd.c:1199:23: warning: '%llu' directive output may be truncated writing between 1 and 11 bytes into a
+region of size 6 [-Wformat-truncation=]
+   snprintf(buf, 7, "%c%llu", sign, value);
+
+../../src/wmnd.c:1246:23: warning: '%f' directive output may be truncated writing between 3 and 317 bytes into a r
+egion of size 6 [-Wformat-truncation=]
+   snprintf(buf, 7, "%c%f", sign, f);
+                       ^~
+---
+ src/drivers.c | 16 ++++++++++++----
+ src/wmnd.c    | 19 +++----------------
+ 2 files changed, 15 insertions(+), 20 deletions(-)
+
+diff --git a/src/drivers.c b/src/drivers.c
+index aa5d8c6..30a08a7 100644
+--- a/src/drivers.c
++++ b/src/drivers.c
+@@ -476,8 +476,12 @@ linux_proc_list(const char* devname, struct Devices* list)
+     if(!fd) return 0;
+ 
+     /* Skip the first 2 lines */
+-    fgets(temp, MAXBUF, fd);
+-    fgets(temp, MAXBUF, fd);
++    if (!fgets(temp, MAXBUF, fd)
++       || !fgets(temp, MAXBUF, fd))
++    {
++      fclose(fd);
++      return 0;
++    }
+ 
+     while(fgets(temp, MAXBUF, fd))
+     {
+@@ -514,8 +518,12 @@ linux_proc_get(struct Devices* dev, unsigned long long* ip, unsigned long long*
+   fp = fopen(linux_proc_netDevice, "r");
+   if(!fp) return 1;
+ 
+-  fgets(temp, MAXBUF, fp);
+-  fgets(temp, MAXBUF, fp);
++  if (!fgets(temp, MAXBUF, fp)
++     || !fgets(temp, MAXBUF, fp))
++  {
++    fclose(fp);
++    return 1;
++  }
+ 
+   *ib = *ob = *ip = *op = 0;
+ 
+diff --git a/src/wmnd.c b/src/wmnd.c
+index e579603..a58c4eb 100644
+--- a/src/wmnd.c
++++ b/src/wmnd.c
+@@ -909,7 +909,7 @@ int main(int argc, char* *argv)
+   /* check for at least one display mode */
+   if(!drwFuncs->funcName)
+   {
+-    msg_err("no avaible display modes, exiting");
++    msg_err("no available display modes, exiting");
+     exit(1);
+   }
+ 
+@@ -1170,8 +1170,6 @@ void
+ binary_scale(unsigned char sign, unsigned long long value, char* buf)
+ {
+   unsigned char scale;
+-  unsigned int i;
+-  char* r;
+ 
+   if(value > 1073741823)
+   {
+@@ -1196,18 +1194,7 @@ binary_scale(unsigned char sign, unsigned long long value, char* buf)
+   else
+     scale = ' ';
+ 
+-  snprintf(buf, 7, "%c%llu", sign, value);
+-  r = buf;
+-  r++;
+-
+-  for(i = 3; i > 0 && *r != '\0'; i--)
+-  {
+-    if(*r == '+' || *r == '-' || *r == '.')
+-      ++i;
+-    ++r;
+-  }
+-  *r++ = scale;
+-  *r = '\0';
++  snprintf(buf, 7, "%c%llu%c", sign, value < 999ul  ? value : 999ul, scale);
+ }
+ 
+ 
+@@ -1243,7 +1230,7 @@ metric_scale(unsigned char sign, unsigned long long value, char* buf)
+   else
+     scale = ' ';
+ 
+-  snprintf(buf, 7, "%c%f", sign, f);
++  snprintf(buf, 7, "%c%.2f", sign, f);
+   r = buf;
+   r++;
+ 

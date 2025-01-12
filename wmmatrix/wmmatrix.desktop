@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=wmmatrix
+Comment=Dockapp that displays Matrix digital rain
+Exec=wmmatrix
+Categories=Utility
+Keywords=matrix;rain;dockapp;windowmaker
