@@ -2,7 +2,7 @@ OVERVIEW
 ========
 
 This repository contains **wmaker** pkgsrc collection: build scripts
-and files for building Window Maker & dockapps packages.
+and files for Window Maker & dockapps packages.
 
 Packages in this collection must depend only on **desktop**, **xorg**,
 **system** and **core** pkgsrc collections.
