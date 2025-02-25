@@ -1,10 +1,10 @@
 # Description: Window manager for X emulating the NeXTSTEP UI
 # URL:         https://windowmaker.org/
-# Depends on:  giflib imagemagick libexif pango xorg-libxinerama xorg-libxmu xorg-libxpm xorg-libxres
+# Depends on:  giflib libexif libjpeg-turbo pango xorg-libxinerama xorg-libxmu xorg-libxpm xorg-libxrandr xorg-libxres
 
 name=wmaker
 version=0.96.0-da676c9
-release=1
+release=2
 #source=https://github.com/window-maker/wmaker/releases/download/wmaker-$version/WindowMaker-$version.tar.gz
 source="https://github.com/window-maker/$name/archive/${version#*-}/$name-$version.tar.gz
 	0001-wmaker-fix-stacking-order-of-dock-and-fullscreen.patch
@@ -46,7 +46,9 @@ build() {
 		--prefix=/usr      \
 		--sysconfdir=/etc  \
 		--disable-static   \
+		--disable-magick   \
 		--disable-tiff     \
+		--disable-webp     \
 		--enable-modelock  \
 		--enable-xinerama  \
 		--enable-randr     \
