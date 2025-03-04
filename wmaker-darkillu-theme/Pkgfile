@@ -1,0 +1,19 @@
+# Description: DarkIllu WindowMaker theme
+# URL:         https://www.gnome-look.org/p/1018327
+# Depends on:  wmaker
+
+name=wmaker-darkillu-theme
+version=0.1
+release=1
+source="DarkIllu.themed/BlackTitle.png
+	DarkIllu.themed/kachel.png
+	DarkIllu.themed/scaler.png
+	DarkIllu.themed/style
+	style.patch"
+
+build() {
+	patch -Np1 -i $SRC/style.patch
+
+	install -m 0644 -Dt $PKG/usr/share/WindowMaker/Themes/DarkIllu.themed \
+		*.png style
+}

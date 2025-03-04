@@ -1,0 +1,54 @@
+diff '--color=auto' -pruN DarkIllu_orig.themed/style DarkIllu.themed/style
+--- DarkIllu_orig.themed/style	2025-03-04 07:27:49.311374320 +0200
++++ DarkIllu.themed/style	2025-03-04 08:23:25.580244471 +0200
+@@ -1,35 +1,35 @@
+ {
+-  LargeDisplayFont = "Trebuchet MS,Luxi Sans:pixelsize=24";
+-  HighlightColor = "#343434";
++  LargeDisplayFont = "Sans:pixelsize=24";
++  HighlightColor = "#70737a";
+   MenuTextExtendSpace = 0;
+-  FTitleColor = "#eeeeee";
++  FTitleColor = "#dadada";
+   MenuTitleExtendSpace = 0;
+-  MenuTextFont = "Trebuchet MS,Luxi Sans:pixelsize=12";
+-  WorkspaceBack = (solid, "#333340");
++  MenuTextFont = "Sans:pixelsize=11";
++  WorkspaceBack = (solid, "#404040");
+   UTitleBack = (tpixmap, BlackTitle.png, "#000000");
+   NormalCursor = (builtin, left_ptr);
+-  IconTitleFont = "Arial,Luxi Sans:pixelsize=9";
++  IconTitleFont = "Sans:pixelsize=9";
+   PTitleBack = (tpixmap, BlackTitle.png, "#000000");
+-  WindowTitleFont = "Liberation Sans:slant=0:weight=200:width=100:pixelsize=11";
+-  UTitleColor = "#9d9d9d";
++  WindowTitleFont = "Sans:bold:pixelsize=11";
++  UTitleColor = "#989898";
+   MenuDisabledColor = "#acacac";
+-  ClipTitleFont = "Verdana:bold:pixelsize=10";
++  ClipTitleFont = "Sans:bold:pixelsize=10";
+   MenuStyle = flat;
+-  MenuTextBack = (solid, "#636363");
+-  PTitleColor = "#ffffff";
++  MenuTextBack = (solid, "#404040");
++  PTitleColor = "#e3d1d8";
+   IconBack = (spixmap, kachel.png, "#000000");
+   MenuTitleBack = (tpixmap, BlackTitle.png, "#000000");
+-  DisplayFont = "Trebuchet MS,Luxi Sans:pixelsize=12";
++  DisplayFont = "Sans:pixelsize=12";
+   FTitleBack = (tpixmap, BlackTitle.png, "#000000");
+   WindowTitleExtendSpace = 0;
+   TitleJustify = center;
+   CClipTitleColor = "rgb:61/61/61";
+   ResizebarBack = (spixmap, scaler.png, "#acacac");
+-  MenuTextColor = "#000000";
++  MenuTextColor = "#dadada";
+   ClipTitleColor = black;
+   IconTitleBack = "rgb:50/5a/5e";
+   HighlightTextColor = "#ffffff";
+   IconTitleColor = white;
+-  MenuTitleFont = "Trebuchet MS,Luxi Sans:bold:pixelsize=12";
+-  MenuTitleColor = "#ffffff";
++  MenuTitleFont = "Sans:bold:pixelsize=11";
++  MenuTitleColor = "#dadada";
+ }
