@@ -18,7 +18,7 @@ For one CPU *wmcpufreq* displays:
 . The driver in green.
 . The active governor in red.
 
-For more CPUs B<wmcpufreq> displays:
+For more CPUs *wmcpufreq* displays:
 
 . The frequency in use between the maximum and minimum.
 . The active governor in red.
