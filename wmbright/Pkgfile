@@ -1,24 +1,22 @@
 # Description: Brightness control dockapp
 # URL:         https://github.com/Jolmberg/wmbright
-# Depends on:  xorg-libxpm xorg-libxrandr
+# Depends on:  scdoc xorg-libxpm xorg-libxrandr
 
 name=wmbright
 version=0.1-f5438c7
-release=1
+release=2
 source="https://github.com/Jolmberg/$name/archive/${version#*-}/$name-$version.tar.gz
 	Makefile.patch
-	Makefile.pod2man
-	wmbright.1.pod
+	wmbright.1x.scdoc
 	wmbright.desktop"
 
 build() {
 	cd $name-*
 
 	patch -p0 -i $SRC/Makefile.patch
-	cp $SRC/Makefile.pod2man $SRC/wmbright.1.pod .
 
-	make -f Makefile.pod2man
-	make -f Makefile PREFIX=/usr MANPREFIX=/usr/share/man DESTDIR=$PKG install
+	scdoc < $SRC/wmbright.1x.scdoc > wmbright.1x
 
+	make PREFIX=/usr MANPREFIX=/usr/share/man DESTDIR=$PKG install
 	install -m 0644 -Dt $PKG/usr/share/applications $SRC/wmbright.desktop
 }

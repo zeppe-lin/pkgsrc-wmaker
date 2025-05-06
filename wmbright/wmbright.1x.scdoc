@@ -1,0 +1,139 @@
+WMBRIGHT(1x)
+
+# NAME
+
+wmbright - dockapp that provides monitor brightness control
+
+# SYNOPSIS
+
+*wmbright* [*-hkov*] [*-d* _display_] [*-e* _name_] [*-f* _conffile_]
+
+# DESCRIPTION
+
+*wmbright* is a brightness control dockapp in the style of *wmix*(1x)
+that allows control of backlight level for some laptop monitors and
+gamma manipulation for most outputs.
+
+The options are as follows:
+
+*-d* _display_
+	Connect to remote X display.
+
+*-e* _name_
+	Exclude output, can be used many times.
+
+*-f* _conffile_
+	Parse configuration file.
+	Default: ~/.wmbrightrc.
+
+*-h*
+	Print help and exit.
+
+*-k*
+	Disable grabbing of brightness control keys.
+
+*-o*
+	Disable OSD.
+
+*-v*
+	Verbose mode.
+
+## Usage
+
+Upon starting, *wmbright* detects all active outputs and tries to
+determine the best way to control their brightness.  Backlight control
+is used if available, with gamma manipulation as a fallback.  There
+are multiple ways to control brightness with *wmbright*:
+
+. Click and drag on the knob.
+. Use the mouse wheel anywhere inside the dockapp.
+. Use the standard brightness keys if available on your keyboard.
+. Send the signals SIGUSR1 and SIGUSR2.
+
+Initially, *wmbright* is set to the "ALL" output which means that any
+brightness change is applied to all available outputs simultaneously.
+Use the arrow buttons on the bottom left to select individual outputs
+instead.
+
+Above the arrow buttons are indicators for the different brightness
+control methods.  Typically "BL", i.e., backlight, is superior as it
+will actually control the backlight of your monitor rather than just
+changing the colours of the pixels, but if you prefer gamma
+manipulation, click on the gamma indicator to switch to the gamma
+method.  When *wmbright* is set to the "ALL" output, clicking the
+indicators will (try to) switch the method of all outputs at once.
+
+# CONFIGURATION FILE
+
+*wmbright* will read configuration values from a _~/.wmbrightrc_ file
+in your home directory.  The values understood are the following
+(these are also the defaults, in case no configuration file is found):
+
+```
+# 1 = yes, 0 = no
+
+mousewheel=1            # use mousewheel?
+scrolltext=1            # scroll output names when they don't fit
+osd=1                   # display OSD?
+osdcolor=green          # color of the OSD (from rgb.txt)
+wheelbtn1=4             # which mouse button is "wheel up"
+wheelbtn2=5             # which mouse button is "wheel down"
+wheelstep=3             # the step for mouse wheel adjustment
+```
+
+Additionally, an exclude parameter is understood, allowing outputs to be
+excluded from *wmbright* control:
+
+```
+exclude=HDMI-0
+exclude=DVI-I-1
+```
+
+A sample configuration file is provided in _sample.wmbrightrc_.
+
+# TROUBLESHOOTING
+
+## Xorg Config
+
+*wmbright* uses *libxrandr* to manipulate backlight as well as gamma.
+Sometimes xrandr cannot access the backlight property out of the box.
+If your system contains the directory
+_/sys/class/backlight/intel_backlight_ but backlight manipulation does
+not work, it is likely that this can be remedied by adding the file
+_/etc/X11/xorg.conf.d/20-video.conf_ with the following contents (or
+modifying your current xorg config to the same effect):
+
+```
+Section "Device"
+	Identifier  "Intel Graphics"
+	Driver      "intel"
+	Option      "Backlight"  "intel_backlight"
+EndSection
+```
+
+## Night Light
+
+Night light applications such as *redshift* typically use the same
+gamma controls as *wmbright*.  If your brightness seems to revert
+shortly after adjusting it with *wmbright*, it's likely that you have
+some sort of night light software running.  There is not much that can
+be done about this outside of disabling the night light app.
+
+# SIGNAL HANDLING
+
+*USR1*
+	Increase backlight.
+
+*USR2*
+	Decrease backlight.
+
+# FILES
+
+_~/.wmbrightrc_
+	Configuration file.
+
+# SEE ALSO
+
+*xrandr*(1)
+
+; vim: ft=scdoc cc=72 tw=70
