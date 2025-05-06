@@ -9,12 +9,15 @@ REQUIREMENTS
 * `hddtemp`: (optional)  Show hdd temperature/status.
 
 
-TEMPERATURE STATUS
-==================
+NOTES
+=====
 
-As mention above, to show hdd temperature/status, you need to install `hddtemp`
-package and run it as a daemon.  `hddtemp` already ships the `rc.d` file, so
-all you need to do is:
+Temperature Status
+------------------
+
+As mentioned in REQUIREMENTS, to show hdd temperature/status, you need to install
+`hddtemp` package and run it as a daemon.  `hddtemp` already ships the `rc.d`
+service script, so all you need to do is:
 
     sudo pkgman install --deps --group hddtemp
     sudo /etc/rc.d/hddtemp start
@@ -27,7 +30,7 @@ The output should look something like:
 
     /dev/sda: TOSHIBA SERNO: 32°C
 
-Now, you can start `wmhdplop` with `-t` option, like the following:
+Start `wmhdplop` with the `-t` option:
 
     wmhdplop -t -d /dev/sda
 
