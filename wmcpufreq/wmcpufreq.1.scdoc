@@ -1,0 +1,46 @@
+WMCPUFREQ(1)
+
+# NAME
+
+wmcpufreq - dockapp that displays CPU frequency
+
+# SYNOPSIS
+
+*wmcpufreq* [*-v*] [*-exe* _program_] [*-cpuid* _n_[,...]]
+
+# DESCRIPTION
+
+*wmcpufreq* is a dockapp that displays the CPU frequency.
+
+For one CPU *wmcpufreq* displays:
+
+. The frequency in use between the maximum and minimum.
+. The driver in green.
+. The active governor in red.
+
+For more CPUs B<wmcpufreq> displays:
+
+. The frequency in use between the maximum and minimum.
+. The active governor in red.
+
+# OPTIONS
+
+*-v*
+	Print version and exit.
+
+*-exe* _program_
+	The _program_ to be launched when clicking on the *wmcpufreq*
+	icon.
+
+*-cpuid* _n_[,...]
+	Show the frequency in use for CPU _n_, where _n_ >= 0.
+	That allows to launch various instances to monitor more than 4
+	CPUs.
+
+	Example: -cpuid 0,2,4
+
+# BUGS
+
+A lot.
+
+; vim: ft=scdoc cc=72 tw=70

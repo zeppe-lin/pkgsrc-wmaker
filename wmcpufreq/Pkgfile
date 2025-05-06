@@ -1,22 +1,23 @@
 # Description: Dockapp that displays CPU frequency
 # URL:         https://www.dockapps.net/wmcpufreq
-# Depends on:  cpufrequtils libdockapp
+# Depends on:  cpufrequtils libdockapp scdoc
 
 name=wmcpufreq
 version=3.1
-release=1
+release=2
 source="https://www.dockapps.net/download/$name-$version.tar.gz
 	wmcpufreq-3.0-fmax.patch
-	wmcpufreq.1.pod
+	wmcpufreq.1.scdoc
 	wmcpufreq.desktop"
 
 build() {
-	patch -d $name-$version -p1 -i $SRC/$name-3.0-fmax.patch
+	patch -d $name-$version -Np1 -i $SRC/$name-3.0-fmax.patch
 
 	mkdir -p $PKG/usr/bin
 	make -C $name-$version CFLAGS="$CFLAGS" DESTDIR=$PKG/usr install
 
-	pod2man -c ' ' -n $name -r $version -s 1 $SRC/$name.1.pod > $name.1
-	install -m 0644 -Dt $PKG/usr/share/man/man1 $name.1
+	mkdir -p $PKG/usr/share/man/man1
+	scdoc < $SRC/$name.1.scdoc > $PKG/usr/share/man/man1/$name.1
+
 	install -m 0644 -Dt $PKG/usr/share/applications $SRC/$name.desktop
 }
