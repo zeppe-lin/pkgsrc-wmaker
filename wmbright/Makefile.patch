@@ -25,4 +25,4 @@
 -	install $(INSTALL_BIN)	wmbright	$(PREFIX)/bin
 -	install $(INSTALL_DATA)	wmbright.1x	$(PREFIX)/man/man1
 +	install $(INSTALL_BIN)	wmbright	$(DESTDIR)$(PREFIX)/bin/wmbright
-+	install $(INSTALL_DATA)	wmbright.1x	$(DESTDIR)$(MANPREFIX)/man/man1/wmbright.1x
++	install $(INSTALL_DATA)	wmbright.1x	$(DESTDIR)$(MANPREFIX)/man1/wmbright.1x
