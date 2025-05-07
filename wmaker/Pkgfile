@@ -4,7 +4,7 @@
 
 name=wmaker
 version=0.96.0-da676c9
-release=2
+release=3
 #source=https://github.com/window-maker/wmaker/releases/download/wmaker-$version/WindowMaker-$version.tar.gz
 source="https://github.com/window-maker/$name/archive/${version#*-}/$name-$version.tar.gz
 	0001-wmaker-fix-stacking-order-of-dock-and-fullscreen.patch
@@ -20,6 +20,7 @@ source="https://github.com/window-maker/$name/archive/${version#*-}/$name-$versi
 
 	WindowMaker
 	WMRootMenu
+	WMState
 
 	swback.png
 	swtile.png"
@@ -61,7 +62,7 @@ build() {
 
 	# configs
 	install -m 0644 -Dt $PKG/etc/WindowMaker/ \
-		$SRC/WindowMaker $SRC/WMRootMenu
+		$SRC/WindowMaker $SRC/WMRootMenu $SRC/WMState
 
 	# overwrite some pngs with restyled one
 	cp $SRC/sw*.png $PKG/usr/share/WindowMaker/Pixmaps/

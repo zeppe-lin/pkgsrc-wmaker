@@ -6,7 +6,8 @@ f41e20f9caed0578b98d4038559de93a  Interlace.patch
 6f7da72cb9ac0919f8f08407e376a70c  Pastel.patch
 4dce5bd4514c17e31eef454704f1d35f  VioletBlue.patch
 c10ed685597d352c75cb2655829d829b  WMRootMenu
-78279b63f322c9d567dafb2eb4d73c6e  WindowMaker
+5d22d937da1e1ace2e3235e68bb65837  WMState
+ace8b6260e912296567541b0421d5a70  WindowMaker
 fa8ef150dd7c428793d34f589299f714  swback.png
 3e20ba788711d50d6868da87c913199d  swtile.png
 8df0c9d1da5ebd30417ad35284b81272  wmaker-0.96.0-da676c9.tar.gz
