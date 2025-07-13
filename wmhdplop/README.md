@@ -15,9 +15,9 @@ NOTES
 Temperature Status
 ------------------
 
-As mentioned in REQUIREMENTS, to show hdd temperature/status, you need to install
-`hddtemp` package and run it as a daemon.  `hddtemp` already ships the `rc.d`
-service script, so all you need to do is:
+As mentioned in REQUIREMENTS, to show hdd temperature/status, you need
+to install `hddtemp` package and run it as a daemon.  `hddtemp`
+already ships the `rc.d` service script, so all you need to do is:
 
     sudo pkgman install --deps --group hddtemp
     sudo /etc/rc.d/hddtemp start
