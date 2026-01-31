@@ -8,13 +8,13 @@ include ../pkgsrc-core/Makefile
 # collections that this collection depends on or are completely
 # missing.
 check-deps:
-	@${PKGMAN} --root= --no-std-config                     \
-		--config-append="pkgsrcdir ."                  \
-		--config-append="pkgsrcdir ../pkgsrc-desktop"  \
-		--config-append="pkgsrcdir ../pkgsrc-xorg"     \
-		--config-append="pkgsrcdir ../pkgsrc-system"   \
-		--config-append="pkgsrcdir ../pkgsrc-core"     \
-		list-orphans -v | grep '(required by .*)' >&2 || :
+	@${PKGMAN} --root= --no-std-config \
+		--config-append="pkgsrcdir ." \
+		--config-append="pkgsrcdir ../pkgsrc-desktop" \
+		--config-append="pkgsrcdir ../pkgsrc-xorg" \
+		--config-append="pkgsrcdir ../pkgsrc-system" \
+		--config-append="pkgsrcdir ../pkgsrc-core" \
+		list-orphans --dependents | grep '(required by .*)' >&2 || :
 
 # vim: cc=72 tw=70
 # End of file.
