@@ -1,13 +1,13 @@
-README wmhdplop
+README for wmhdplop
 
 ---
-
 
 REQUIREMENTS
 ============
 
 * `hddtemp`: (optional)  Show hdd temperature/status.
 
+---
 
 NOTES
 =====
@@ -44,7 +44,6 @@ Start `wmhdplop` with the `-t` option:
 ```sh
 wmhdplop -t -d /dev/sda
 ```
-
 
 ---
 
