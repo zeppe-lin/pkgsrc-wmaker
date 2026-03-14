@@ -1,6 +1,6 @@
 # Description: WindowMaker dockapp to monitor hard drives
 # URL:         https://www.dockapps.net/wmhdplop
-# Depends on:  xorg-libxpm imlib2
+# Depends on:  imlib2 ttf-font-bitstream-vera xorg-libxpm
 
 name=wmhdplop
 version=0.9.12
