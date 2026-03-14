@@ -5,7 +5,7 @@
   FTitleColor = "#eeeeee";
   MenuTitleExtendSpace = 0;
   MenuTextFont = "Droid Sans:pixelsize=12";
-  WorkspaceBack = (solid, "#224477");
+  WorkspaceBack = (solid, "#295188");
   UTitleBack = (spixmap, title_inactive.png, "#000000");
   NormalCursor = (builtin, left_ptr);
   IconTitleFont = "Droid Sans:pixelsize=9";

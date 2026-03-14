@@ -3,7 +3,7 @@
 # Depends on:  wmaker
 
 name=wmaker-blueglass-theme
-version=0.1
+version=0.2
 release=1
 source="BlueGlass.themed/style
 	BlueGlass.themed/t3.png
