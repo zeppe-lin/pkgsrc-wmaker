@@ -1,0 +1,22 @@
+From bc7c804c625655a19e2c3895c1d81cec37a725be Mon Sep 17 00:00:00 2001
+From: Nikita Donskov <nikitka.donskov@yandex.ru>
+Date: Mon, 26 Jan 2026 21:27:34 +0300
+Subject: [PATCH] fixed typo `./wmbright.pid` -> `/.wmbright.pid`
+
+---
+ misc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/misc.c b/misc.c
+index d0d857d..b600382 100644
+--- a/misc.c
++++ b/misc.c
+@@ -86,7 +86,7 @@ int check_region(int x, int y)
+ /* handle writing PID file, silently ignore if we can't do it */
+ void create_pid_file(void)
+ {
+-#	define SUFFIX		"./wmbright.pid"
++#	define SUFFIX		"/.wmbright.pid"
+     char *home;
+     char *pid;
+     FILE *fp;

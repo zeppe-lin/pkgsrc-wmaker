@@ -1,0 +1,37 @@
+From cc8f2738daae8878d3a0ec8a4393a99b7611ed0b Mon Sep 17 00:00:00 2001
+From: Nikita Donskov <nikitka.donskov@yandex.ru>
+Date: Fri, 23 Jan 2026 11:45:14 +0300
+Subject: [PATCH] fixed heap overflow on startup
+
+---
+ misc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/misc.c b/misc.c
+index 9aeee4e..d0d857d 100644
+--- a/misc.c
++++ b/misc.c
+@@ -86,6 +86,7 @@ int check_region(int x, int y)
+ /* handle writing PID file, silently ignore if we can't do it */
+ void create_pid_file(void)
+ {
++#	define SUFFIX		"./wmbright.pid"
+     char *home;
+     char *pid;
+     FILE *fp;
+@@ -94,12 +95,13 @@ void create_pid_file(void)
+     if (home == NULL)
+         return;
+ 
+-    pid = malloc(strlen(home) + 11);
+-    sprintf(pid, "%s/.wmbright.pid", home);
++    pid = malloc(strlen(home) + sizeof(SUFFIX));
++    sprintf(pid, "%s"SUFFIX, home);
+     fp = fopen(pid, "w");
+     if (fp) {
+         fprintf(fp, "%d\n", getpid());
+         fclose(fp);
+     }
+     free(pid);
++#	undef SUFFIX
+ }

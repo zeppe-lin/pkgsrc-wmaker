@@ -4,8 +4,10 @@
 
 name=wmbright
 version=0.1-f5438c7
-release=2
+release=3
 source="https://github.com/Jolmberg/$name/archive/${version#*-}/$name-$version.tar.gz
+	cc8f2738daae8878d3a0ec8a4393a99b7611ed0b.patch
+	bc7c804c625655a19e2c3895c1d81cec37a725be.patch
 	Makefile.patch
 	wmbright.1x.scdoc
 	wmbright.desktop"
@@ -13,10 +15,13 @@ source="https://github.com/Jolmberg/$name/archive/${version#*-}/$name-$version.t
 build() {
 	cd $name-*
 
+	patch -p1 -i $SRC/cc8f273*.patch
+	patch -p1 -i $SRC/bc7c804*.patch
 	patch -p0 -i $SRC/Makefile.patch
 
 	scdoc < $SRC/wmbright.1x.scdoc > wmbright.1x
 
 	make PREFIX=/usr MANPREFIX=/usr/share/man DESTDIR=$PKG install
-	install -m 0644 -Dt $PKG/usr/share/applications $SRC/wmbright.desktop
+	install -m 0644 -Dt $PKG/usr/share/applications \
+		$SRC/wmbright.desktop
 }
